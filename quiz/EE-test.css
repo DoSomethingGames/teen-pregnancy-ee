@@ -7,26 +7,74 @@ margin-left: 0.5em;
 cursor: pointer; 
 } 
 
-#results { 
+#question { 
 background: #dddada; 
 color: 000000; 
 padding: 3px; 
 text-align: center; 
-width: 200px; 
-cursor: pointer; 
+width: 400px; 
+cursor: default; 
 border: 1px solid gray; 
 }
 
-#results:hover { 
+/*#question:hover { 
 background: #3d91b8; 
 color: #ffffff; 
 padding: 3px; 
 text-align: center; 
+width: 400px; 
+cursor: default; 
+border: 1px solid gray; 
+} */
+
+/*#choice1 {
+background: #dddada;  
+color: #ffffff; 
+padding-top: 3px; 
+padding-bottom: 3px;
+text-align: center; 
 width: 200px; 
 cursor: pointer; 
-border: 1px solid gray; 
-} 
+border: 1px solid gray;
+display: inline-block;
+}
 
+#choice1:hover { 
+background: #3d91b8; 
+color: 000000; 
+padding-top: 3px; 
+padding-bottom: 3px;
+text-align: center; 
+width: 200px; 
+cursor: default; 
+border: 1px solid gray;
+display: inline-block; 
+}
+
+#choice2 {
+background: #dddada; 
+color: #ffffff; 
+padding-top: 3px; 
+padding-bottom: 3px;
+text-align: center; 
+width: 200px; 
+cursor: pointer; 
+border: 1px solid gray;
+display: inline-block;;
+}
+
+#choice2:hover { 
+background: #3d91b8; 
+color: 000000; 
+padding-top: 3px; 
+padding-bottom: 3px; 
+text-align: center; 
+width: 200px; 
+cursor: default; 
+border: 1px solid gray; 
+display: inline-block;
+}
+*/
 #categorylist { 
 margin-top: 6px; 
 display: none; 
