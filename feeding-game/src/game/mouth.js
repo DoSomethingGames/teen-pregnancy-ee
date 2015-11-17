@@ -77,8 +77,7 @@ Mouth.prototype.update = function(deltaTime) {
 
     dist = this.velocity * deltaTime / 1000;
 
-
-    // hack. don't let it try to divid by 0
+    // hack. don't let it try to divide by 0
     if (deltaX == 0) {
       x = this.nextPosition.x;
       y = this.nextPosition.y;
@@ -114,23 +113,4 @@ Mouth.prototype.update = function(deltaTime) {
     this.ellipse.x = x - Math.floor(this.sprite.width / 2);
     this.ellipse.y = y - Math.floor(this.sprite.height / 2);
   }
-
-  // Timer
-  // if (this.timeTilNext > 0) {
-  //   this.timeTilNext -= deltaTime;
-  // }
-  // else {
-  //   // Reset time
-  //   this.timeTilNext = Math.floor(Math.random() * (this.maxTimeTilNext - this.minTimeTilNext)) + this.minTimeTilNext;
-
-  //   // Select new position
-  //   this.nextPosition.x = Math.floor(Math.random() * (this.maxX - this.minX)) + this.minX;
-  //   this.nextPosition.y = Math.floor(Math.random() * (this.maxY - this.minY)) + this.minY;
-
-  //   console.log('Time: %s / x: %d, y: %d', this.timeTilNext, this.nextPosition.x, this.nextPosition.y);
-
-  //   graphics.beginFill(0xff0000);
-  //   graphics.drawCircle(this.nextPosition.x, this.nextPosition.y, 4);
-  //   graphics.endFill();
-  // }
 }

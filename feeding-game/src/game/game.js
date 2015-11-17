@@ -23,7 +23,14 @@ function Game() {
 
   // Score
   var textScore;
-  var score = 0;
+  var scoreCounter = 0;
+  var textMissed;
+  var missedCounter = 0;
+
+  // More text
+  var textTimer;
+  var levelTime;
+  var startingTime = 30;
 
   function init() {
 
@@ -39,7 +46,16 @@ function Game() {
   }
 
   function create() {
-    textScore = game.add.text(700, 50, "Noms: 0", {font: "16px Arial", fill: "#ff0000", align: "center"});
+    var textStyle = {
+      font: '16px Helvetica',
+      fill: '#ff0000'
+    };
+    textScore = game.add.text(700, 10, 'Noms: 0', textStyle);
+    textMissed = game.add.text(700, 30, 'Missed: 0', textStyle);
+    textTimer = game.add.text(700, 50, 'Timer: 0:' + startingTime, textStyle);
+
+    levelTime = startingTime * 1000;
+    lastTimeCheck = (new Date()).getTime();
 
     spBowl = game.add.sprite(575, 325, 'bowl');
 
@@ -79,11 +95,28 @@ function Game() {
     var nextX;
     var nextY;
     var nextVelocity;
+    var timerText;
 
     currTime = (new Date()).getTime();
     deltaTime = currTime - lastTimeCheck;
     lastTimeCheck = currTime;
 
+    // Game Time
+    levelTime -= deltaTime;
+    if (levelTime < 0) {
+      console.log('game over');
+      return;
+    }
+    else {
+      timerText = '0:';
+      if (levelTime < 10000) {
+        timerText += '0'
+      }
+      timerText += Math.floor(levelTime / 1000);
+      textTimer.setText('Timer: ' + timerText);
+    }
+
+    // Update mouth position
     if (timeTilNextPos > 0) {
       timeTilNextPos -= deltaTime;
     }
@@ -127,19 +160,6 @@ function Game() {
     if (sprite.key == 'bowl') {
       spSpoonFood.visible = true;
       spSpoonDefault.visible = false;
-
-if (spMouthOpen1.nextPosition.x == 300) {
-  spMouthOpen1.setPosition(444, 183);
-  spMouthOpen2.setPosition(444, 183);
-}
-else if(spMouthOpen1.nextPosition.x == 444) {
-  spMouthOpen1.setPosition(308, 227);
-  spMouthOpen2.setPosition(308, 2276);
-}
-else if(spMouthOpen1.nextPosition.x == 308) {
-  spMouthOpen1.setPosition(258, 251);
-  spMouthOpen2.setPosition(258, 251);
-}
     }
   }
 
@@ -147,17 +167,21 @@ else if(spMouthOpen1.nextPosition.x == 308) {
     var overlapMouth1;
     var overlapMouth2;
 
+    // Noms?
     if (sprite.key == 'bowl') {
       spSpoonFood.visible = false;
       spSpoonDefault.visible = true;
-    }
 
-    overlapMouth1 = spMouthOpen1.sprite.visible && spMouthOpen1.overlap(spSpoonFood);
-    overlapMouth2 = spMouthOpen2.sprite.visible && spMouthOpen2.overlap(spSpoonFood);
-    if (overlapMouth1 || overlapMouth2) {
-      console.log('NOM');
-      score++;
-      textScore.setText('Noms: ' + score);
+      overlapMouth1 = spMouthOpen1.sprite.visible && spMouthOpen1.overlap(spSpoonFood);
+      overlapMouth2 = spMouthOpen2.sprite.visible && spMouthOpen2.overlap(spSpoonFood);
+      if (overlapMouth1 || overlapMouth2) {
+        scoreCounter++;
+        textScore.setText('Noms: ' + scoreCounter);
+      }
+      else {
+        missedCounter++;
+        textMissed.setText('Missed: ' + missedCounter);
+      }
     }
   }
 
