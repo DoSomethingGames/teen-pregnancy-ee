@@ -9,13 +9,32 @@ cursor: pointer;
 
 #question { 
 background: #dddada; 
+display: inline-block;
 color: 000000; 
 padding: 3px; 
 text-align: center; 
-width: 400px; 
+width: 800px; 
 cursor: default; 
 border: 1px solid gray; 
 }
+
+/*#choice1 {
+	float: left;
+
+}
+
+#choice1:hover {
+	float: left;
+}
+
+#choice2 {
+	float: right;
+
+}
+
+#choice2:hover {
+	float: right;
+}*/
 
 /*#question:hover { 
 background: #3d91b8; 
@@ -75,7 +94,7 @@ border: 1px solid gray;
 display: inline-block;
 }
 */
-#categorylist { 
+/*#categorylist { 
 margin-top: 6px; 
 display: none; 
 } 
@@ -87,4 +106,4 @@ display: none;
 #closing {
 display: none;
 font-style: italic;
-}
+}*/
