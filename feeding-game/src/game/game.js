@@ -20,6 +20,9 @@ function Game() {
   var maxY = 300;
   var minTimeTilNextPos = 2000;
   var maxTimeTilNextPos = 6000;
+  var timeTilNextMouthChange = 2500;
+  var minTimeTilNextMouthChange = 1000;
+  var maxTimeTilNextMouthChange = 5000;
 
   // Score
   var textScore;
@@ -59,7 +62,7 @@ function Game() {
 
     spBowl = game.add.sprite(575, 325, 'bowl');
 
-    spMouthClosed = game.add.sprite(0, 0, 'mouth-closed');
+    spMouthClosed = new Mouth(300, 150, 'mouth-closed');
     spMouthOpen1 = new Mouth(300, 150, 'mouth-open1');
     spMouthOpen2 = new Mouth(300, 150, 'mouth-open2');
 
@@ -67,12 +70,11 @@ function Game() {
     spSpoonDefault = game.add.sprite(0, 0, 'spoon-nofood');
 
     // Set anchor to middle of sprite
-    spMouthClosed.anchor.setTo(0.5, 0.5);
     spSpoonFood.anchor.setTo(0.5, 0.5);
     spSpoonDefault.anchor.setTo(0.5, 0.5);
 
     // Some sprites stay hidden until they're needed
-    spMouthClosed.visible = false;
+    spMouthClosed.sprite.visible = false;
     spMouthOpen1.sprite.visible = true;
     spMouthOpen2.sprite.visible = false;
     spSpoonFood.visible = false;
@@ -92,6 +94,7 @@ function Game() {
   function update() {
     var currTime;
     var deltaTime;
+    var mouthState;
     var nextX;
     var nextY;
     var nextVelocity;
@@ -116,7 +119,7 @@ function Game() {
       textTimer.setText('Timer: ' + timerText);
     }
 
-    // Update mouth position
+    // Update mouth position // @todo 
     if (timeTilNextPos > 0) {
       timeTilNextPos -= deltaTime;
     }
@@ -132,6 +135,7 @@ function Game() {
       nextVelocity = Math.floor(Math.random() * (maxVelocity - minVelocity)) + minVelocity;
       spMouthOpen1.velocity = nextVelocity;
       spMouthOpen2.velocity = nextVelocity;
+      spMouthClosed.velocity = nextVelocity;
 
       // DEBUG STUFF
       // console.log('Time: %s / x: %d, y: %d', timeTilNextPos, nextX, nextY);
@@ -141,11 +145,40 @@ function Game() {
 
       spMouthOpen1.setPosition(nextX, nextY);
       spMouthOpen2.setPosition(nextX, nextY);
+      spMouthClosed.setPosition(nextX, nextY);
     }
 
-    // Mouth position
+    // Mouth movement
     spMouthOpen1.update(deltaTime);
     spMouthOpen2.update(deltaTime);
+    spMouthClosed.update(deltaTime);
+
+    if (timeTilNextMouthChange > 0) {
+      timeTilNextMouthChange -= deltaTime;
+    }
+    else {
+      timeTilNextMouthChange = Math.floor(Math.random() * (maxTimeTilNextMouthChange - minTimeTilNextMouthChange) + minTimeTilNextMouthChange);
+
+      mouthState = Math.floor(Math.random() * 3);
+      if (mouthState == 0) {
+        // open 1
+        spMouthOpen1.sprite.visible = true;
+        spMouthOpen2.sprite.visible = false;
+        spMouthClosed.sprite.visible = false;
+      }
+      else if (mouthState == 1) {
+        // open 2
+        spMouthOpen1.sprite.visible = false;
+        spMouthOpen2.sprite.visible = true;
+        spMouthClosed.sprite.visible = false;
+      }
+      else if (mouthState == 2) {
+        // closed 2
+        spMouthOpen1.sprite.visible = false;
+        spMouthOpen2.sprite.visible = false;
+        spMouthClosed.sprite.visible = true;
+      }
+    }
 
     // Spoon position follows the mouse
     spSpoonFood.position = game.input.position;
