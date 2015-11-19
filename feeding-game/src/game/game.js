@@ -71,7 +71,7 @@ function Game() {
 
     // Set anchor to middle of sprite
     spSpoonFood.anchor.setTo(0.5, 0.5);
-    spSpoonDefault.anchor.setTo(0.5, 0.5);
+    spSpoonDefault.anchor.setTo(0.5, 0.5);s
 
     // Some sprites stay hidden until they're needed
     spMouthClosed.sprite.visible = false;
