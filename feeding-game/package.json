@@ -1,0 +1,20 @@
+{
+  "name": "game",
+  "version": "2.0.0",
+  "description": "A simple template project to quickly get up and running with Phaser.",
+  "main": "deploy/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "http://github.com/DoSomethingGames/phaser-project-template",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-connect": "~0.6.0",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-open": "~0.2.3"
+  }
+}

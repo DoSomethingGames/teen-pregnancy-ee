@@ -1,0 +1,12 @@
+.DS_Store
+bin/*
+node_modules/*
+obj/*
+*.csproj
+*.csproj.user
+*.sln
+*.suo
+.idea/*
+
+# Ignore compiled project output
+deploy/
