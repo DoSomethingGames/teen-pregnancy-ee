@@ -15,9 +15,9 @@ function StartScreen() {
 
 	function create() {
     background = game.add.tileSprite(0, 0, 800, 600, 'background');
-    startButton = game.add.button(game.world.centerX - 150, game.world.centerY, 'startButton', null, null, 2, 1, 0);
+    startButton = game.add.button(game.world.centerX, game.world.centerY, 'startButton', null, null, 2, 1, 0);
     startButton.inputEnabled = true;
-    startButton.events.onInputUp.add(transitiontoNextState);
+    startButton.events.onInputUp.add(transitionToNextState);
     //startButton.events.onInputOver.add()
 	}
 
@@ -29,7 +29,7 @@ function StartScreen() {
     var properties = {alpha: 0};
     var fadeOutDuration = 2000;
     var ease = Phaser.Easing.Linear.None;
-    var autoStart = truel
+    var autoStart = true;
     var delay = 500;
     var repeat = false;
     var yoyo = false;

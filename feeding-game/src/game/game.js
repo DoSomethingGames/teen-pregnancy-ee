@@ -35,6 +35,9 @@ function Game() {
   var levelTime;
   var startingTime = 30;
 
+  // Restart button
+  var restartButton;
+
   function init() {
 
   }
@@ -46,6 +49,7 @@ function Game() {
     game.load.image('mouth-open2', 'assets/mouth_open2_placeholder.png');
     game.load.image('spoon-food', 'assets/spoon_food_placeholder.png');
     game.load.image('spoon-nofood', 'assets/spoon_nofood_placeholder.png');
+    game.load.image('restart-button', 'assets/restartButton.png');
   }
 
   function create() {
@@ -71,7 +75,7 @@ function Game() {
 
     // Set anchor to middle of sprite
     spSpoonFood.anchor.setTo(0.5, 0.5);
-    spSpoonDefault.anchor.setTo(0.5, 0.5);s
+    spSpoonDefault.anchor.setTo(0.5, 0.5);
 
     // Some sprites stay hidden until they're needed
     spMouthClosed.sprite.visible = false;
@@ -108,6 +112,9 @@ function Game() {
     levelTime -= deltaTime;
     if (levelTime < 0) {
       console.log('game over');
+      restartButton = game.add.button(game.world.centerX, game.world.centerY, 'restart-button', null, null, 2, 1, 0);
+      restartButton.inputEnabled = true;
+      restartButton.events.onInputUp.add(restartGame);
       return;
     }
     else {
@@ -216,6 +223,12 @@ function Game() {
         textMissed.setText('Missed: ' + missedCounter);
       }
     }
+  }
+
+  function restartGame() {
+    restartButton.kill();
+    game.state.add('game', new Game());
+    game.state.start('game');
   }
 
   return {

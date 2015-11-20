@@ -32,9 +32,9 @@ module.exports = function (grunt) {
       dist: {
         src: [  "src/lib/**/*.js",
           "src/game/main.js",
-          "src/game/startScreen.js",
           "src/game/game.js",
-          "src/game/mouth.js"
+          "src/game/mouth.js",
+          "src/game/startScreen.js"
            ],
         dest: 'deploy/js/<%= pkg.name %>.js'
       }
