@@ -27,10 +27,10 @@ function StartScreen() {
 
   function transitionToNextState() {
     var properties = {alpha: 0};
-    var fadeOutDuration = 2000;
+    var fadeOutDuration = 250;
     var ease = Phaser.Easing.Linear.None;
     var autoStart = true;
-    var delay = 500;
+    var delay = 250;
     var repeat = false;
     var yoyo = false;
 

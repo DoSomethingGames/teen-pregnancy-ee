@@ -1,55 +1,81 @@
 var graphics;
-function Mouth(x, y, spriteKey) {
-  var ex;
-  var ey;
+function Mouth(openKey1, openKey2, closedKey) {
+  var ex1, ex2, ey1, ey2;
 
-  // velocity: # of px / 1000 ms
-  this.minVelocity = 200;
-  this.maxVelocity = 600;
+  var startPos = {x: 300, y: 250};
+
+  this.currentState = 'open1';
+  this.currentPos = {x: startPos.x, y: startPos.y};
+  this.nextPos = {x: startPos.x, y: startPos.y};
+
+  this.validPositions = [
+    {x: 250, y: 250},
+    {x: 300, y: 250},
+    {x: 350, y: 250},
+    {x: 250, y: 150},
+    {x: 300, y: 150},
+    {x: 350, y: 150}
+  ];
+
+  // Velocity measured by # of px / 1000 ms
+  this.velocity = 200;
+
+  // Timer things
+  this.timeToNextPos = 3000;
+  this.minTimeToNextPos = 1000;
+  this.maxTimeToNextPos = 3000;
+  this.timeToNextState = 1500;
+  this.minTimeToNextState = 1000;
+  this.maxTimeToNextState = 3000;
+
+  this.openState1 = {
+    sprite: game.add.sprite(startPos.x, startPos.y, openKey1),
+    ellipse: undefined
+  };
   
-  this.minX = 200;
-  this.maxX = 600;
-  this.minY = 150;
-  this.maxY = 300;
+  this.openState2 = {
+    sprite: game.add.sprite(startPos.x, startPos.y, openKey2),
+    ellipse: undefined
+  };
 
-  this.minTimeTilNext = 5000;
-  this.maxTimeTilNext = 5000;
+  this.closedState = {
+    sprite: game.add.sprite(startPos.x, startPos.y, closedKey),
+    ellipse: undefined
+  };
 
-  this.timeTilNext = 5000;
+  // Set anchor and visibility
+  this.openState1.sprite.anchor.setTo(0.5, 0.5);
+  this.openState2.sprite.anchor.setTo(0.5, 0.5);
+  this.closedState.sprite.anchor.setTo(0.5, 0.5);
+  this.openState1.sprite.visible = true;
+  this.openState2.sprite.visible = false;
+  this.closedState.sprite.visible = false;
 
-  this.velocity = 200; // # of px / 1000 ms
-
-  this.nextPosition = {x: 300, y: 150};
-
-  // Sprite
-  this.sprite = game.add.sprite(x, y, spriteKey);
-  this.sprite.anchor.setTo(0.5, 0.5);
-  this.sprite.inputEnabled = true;
-
-  // Ellipse used as as form of collision/overlap detection
-  ex = x - Math.floor(this.sprite.width / 2);
-  ey = y - Math.floor(this.sprite.height / 2);
-  this.ellipse = new Phaser.Ellipse(ex, ey, this.sprite.width, this.sprite.height);
+  // Ellipses for hit detection
+  ex1 = startPos.x - Math.floor(this.openState1.sprite.width / 2);
+  ey1 = startPos.y - Math.floor(this.openState1.sprite.height / 2);
+  this.openState1.ellipse = new Phaser.Ellipse(ex1, ey1, this.openState1.sprite.width, this.openState1.sprite.height);
+  ex2 = startPos.x - Math.floor(this.openState2.sprite.width / 2);
+  ey2 = startPos.y - Math.floor(this.openState2.sprite.height / 2);
+  this.openState2.ellipse = new Phaser.Ellipse(ex2, ey2, this.openState2.sprite.width, this.openState2.sprite.height);
 
   // DEBUG DRAW ELLIPSE
+  /*
   graphics = game.add.graphics(0, 0);
-  // graphics.lineStyle(1, 0xffd900);
-  // var ew = Math.floor(this.sprite.width / 2);
-  // var eh = Math.floor(this.sprite.height / 2);
-  // graphics.drawEllipse(x, y, ew, eh);
+  graphics.lineStyle(1, 0xffd900);
+  var ew1 = Math.floor(this.openState1.sprite.width / 2);
+  var eh1 = Math.floor(this.openState1.sprite.height / 2);
+  graphics.drawEllipse(startPos.x, startPos.y, ew1, eh1);
+  graphics.lineStyle(1, 0x009dff);
+  var ew2 = Math.floor(this.openState2.sprite.width / 2);
+  var eh2 = Math.floor(this.openState2.sprite.height / 2);
+  graphics.drawEllipse(startPos.x, startPos.y, ew2, eh2);
+  */
 }
 
 Mouth.prototype.onInputUp = function(callback, context) {
-  this.sprite.events.onInputUp.add(callback, context);
-}
-
-Mouth.prototype.overlap = function(otherSprite) {
-  return this.ellipse.contains(otherSprite.position.x, otherSprite.position.y);
-}
-
-Mouth.prototype.setPosition = function(x, y) {
-  this.nextPosition.x = x;
-  this.nextPosition.y = y;
+  this.openState1.sprite.events.onInputUp.add(callback, context);
+  this.openState2.sprite.events.onInputUp.add(callback, context);
 }
 
 Mouth.prototype.update = function(deltaTime) {
@@ -58,59 +84,147 @@ Mouth.prototype.update = function(deltaTime) {
   var dirX;
   var dirY;
   var dist;
-  var theta;
+  var newX;
+  var newY;
   var startX;
   var startY;
-  var x;
-  var y;
-
-  startX = this.sprite.position.x;
-  startY = this.sprite.position.y;
-
-  deltaX = this.nextPosition.x - startX;
-  deltaY = this.nextPosition.y - startY;
+  var theta;
+  var selection;
+  var stateSelected;
+  var newPosSelected = false;
 
   // Position
-  if (deltaX != 0 || deltaY != 0) {
-    dirX = deltaX > 0 ? 1 : -1;
-    dirY = deltaY > 0 ? 1 : -1;
+  if (this.timeToNextPos > 0) {
+    this.timeToNextPos -= deltaTime;
 
-    dist = this.velocity * deltaTime / 1000;
+    startX = this.currentPos.x;
+    startY = this.currentPos.y;
 
-    // hack. don't let it try to divide by 0
-    if (deltaX == 0) {
-      x = this.nextPosition.x;
-      y = this.nextPosition.y;
+    deltaX = this.nextPos.x - startX;
+    deltaY = this.nextPos.y - startY;
+
+    if (deltaX != 0 || deltaY != 0) {
+      dirX = deltaX > 0 ? 1 : -1;
+      dirY = deltaY > 0 ? 1 : -1;
+
+      dist = this.velocity * deltaTime / 1000;
+
+      // hack. don't let it try to divide by 0
+      if (deltaX == 0) {
+        newX = this.nextPos.x;
+        newY = this.nextPos.y;
+      }
+      else {
+        theta = Math.atan(deltaY / deltaX);
+
+        var modX = 1;
+        var modY = 1;
+        if (Math.cos(theta) < 0 && dirX > 0) modX = -1;
+        if (Math.cos(theta) > 0 && dirX < 0) modX = -1; 
+        if (Math.sin(theta) < 0 && dirY > 0) modY = -1;
+        if (Math.sin(theta) > 0 && dirY < 0) modY = -1; 
+        newX = Math.cos(theta) * dist * modX;
+        newY = Math.sin(theta) * dist * modY;
+        newX += this.currentPos.x;
+        newY += this.currentPos.y;
+
+        if ((startX <= this.nextPos.x && newX > this.nextPos.x) ||
+            (startX >= this.nextPos.x && newX < this.nextPos.x)) {
+          newX = this.nextPos.x;
+        }
+        if ((startY <= this.nextPos.y && newY > this.nextPos.y) ||
+            (startY >= this.nextPos.y && newY < this.nextPos.y)) {
+          newY = this.nextPos.y;
+        }
+      }
+
+      this.currentPos.x = newX;
+      this.currentPos.y = newY;
+
+      this.updatePosition(this.currentPos.x, this.currentPos.y);
+    }
+  }
+  // Select a new position
+  else {
+    while (!newPosSelected) {
+      selection = Math.floor(Math.random() * this.validPositions.length);
+      if (this.validPositions[selection].x != this.nextPos.x && this.validPositions[selection].y != this.nextPos.y) {
+        // Set new position
+        this.nextPos.x = this.validPositions[selection].x;
+        this.nextPos.y = this.validPositions[selection].y;
+        newPosSelected = true;
+
+        // Reset timer
+        this.timeToNextPos = Math.floor(Math.random() * (this.maxTimeToNextPos - this.minTimeToNextPos) + this.minTimeToNextPos);
+      }
+    }
+  }
+
+  // State
+  if (this.timeToNextState > 0) {
+    this.timeToNextState -= deltaTime;
+  }
+  // Select next state
+  else {
+    // Don't let next state be closed if the previous one already was
+    if (this.currentState == 'closed') {
+      stateSelected = Math.floor(Math.random() * 2);
     }
     else {
-      theta = Math.atan(deltaY / deltaX);
-
-      var modX = 1;
-      var modY = 1;
-      if (Math.cos(theta) < 0 && dirX > 0) modX = -1;
-      if (Math.cos(theta) > 0 && dirX < 0) modX = -1; 
-      if (Math.sin(theta) < 0 && dirY > 0) modY = -1;
-      if (Math.sin(theta) > 0 && dirY < 0) modY = -1; 
-      x = Math.cos(theta) * dist * modX;
-      y = Math.sin(theta) * dist * modY;
-      x += this.sprite.position.x;
-      y += this.sprite.position.y;
-
-      if ((startX <= this.nextPosition.x && x > this.nextPosition.x) ||
-          (startX >= this.nextPosition.x && x < this.nextPosition.x)) {
-        x = this.nextPosition.x;
-      }
-      if ((startY <= this.nextPosition.y && y > this.nextPosition.y) ||
-          (startY >= this.nextPosition.y && y < this.nextPosition.y)) {
-        y = this.nextPosition.y;
-      }
+      stateSelected = Math.floor(Math.random() * 3);
     }
 
-    this.sprite.position.x = x;
-    this.sprite.position.y = y;
-// console.log(this.sprite.position.x + ', ' + this.sprite.position.y);
-
-    this.ellipse.x = x - Math.floor(this.sprite.width / 2);
-    this.ellipse.y = y - Math.floor(this.sprite.height / 2);
+    // Update sprite visibility
+    if (stateSelected == 0) {
+      this.currentState = 'open1';
+      this.openState1.sprite.visible = true;
+      this.openState2.sprite.visible = false;
+      this.closedState.sprite.visible = false;
+    }
+    else if (stateSelected == 1) {
+      this.currentState = 'open2';
+      this.openState1.sprite.visible = false;
+      this.openState2.sprite.visible = true;
+      this.closedState.sprite.visible = false;
+    }
+    else if (stateSelected == 2) {
+      this.currentState = 'closed';
+      this.openState1.sprite.visible = false;
+      this.openState2.sprite.visible = false;
+      this.closedState.sprite.visible = true;
+    }
+    
+    // Reset timer
+    this.timeToNextState = Math.floor(Math.random() * (this.maxTimeToNextState - this.minTimeToNextState) + this.minTimeToNextState);
   }
+}
+
+Mouth.prototype.updatePosition = function(x, y) {
+  this.openState1.sprite.position.x = x;
+  this.openState1.sprite.position.y = y;
+  this.openState2.sprite.position.x = x;
+  this.openState2.sprite.position.y = y;
+  this.closedState.sprite.position.x = x;
+  this.closedState.sprite.position.y = y;
+
+  this.openState1.ellipse.x = x - Math.floor(this.openState1.sprite.width / 2);
+  this.openState1.ellipse.y = y - Math.floor(this.openState1.sprite.height / 2);
+  this.openState2.ellipse.x = x - Math.floor(this.openState2.sprite.width / 2);
+  this.openState2.ellipse.y = y - Math.floor(this.openState2.sprite.height / 2);
+}
+
+Mouth.prototype.hitDetect = function(otherSprite) {
+  var hit;
+
+  hit = this.openState1.sprite.visible && this.openState1.ellipse.contains(otherSprite.position.x, otherSprite.position.y);
+  if (hit) {
+    return true;
+  }
+
+  hit = this.openState2.sprite.visible && this.openState2.ellipse.contains(otherSprite.position.x, otherSprite.position.y);
+  if (hit) {
+    return true;
+  }
+
+  return false;
 }
