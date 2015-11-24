@@ -88,6 +88,7 @@ function Game() {
     levelTime -= deltaTime;
     if (levelTime < 0) {
       restartButton = game.add.button(game.world.centerX, game.world.centerY, 'restart-button', null, null, 2, 1, 0);
+      restartButton.anchor.setTo(0.5, 0.5);
       restartButton.inputEnabled = true;
       restartButton.events.onInputUp.add(restartGame);
       return;
