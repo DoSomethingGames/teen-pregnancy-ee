@@ -33,7 +33,7 @@ function Game() {
     game.load.image('bowl-bg', 'assets/bowl_placeholder_full.png');
     game.load.image('bowl', 'assets/bowl_placeholder.png');
 
-    game.load.image('face', 'assets/face_placeholder.png');
+    game.load.spritesheet('face', 'assets/face_spritesheet_placeholder.png', 256, 256);
     game.load.image('eyes', 'assets/eyes_placeholder.png');
     game.load.image('mouth-closed', 'assets/mouth_closed_placeholder.png');
     game.load.image('mouth-open1', 'assets/mouth_open1_placeholder.png');
@@ -143,9 +143,23 @@ function Game() {
         textScore.setText('Noms: ' + scoreCounter);
       }
       else {
-        missedCounter++;
-        textMissed.setText('Missed: ' + missedCounter);
+        feedMissed();
       }
+    }
+  }
+
+  function feedMissed() {
+    missedCounter++;
+    textMissed.setText('Missed: ' + missedCounter);
+
+    if (missedCounter >= 6) {
+      mouth.setFaceFrame(3);
+    }
+    else if (missedCounter >= 4) {
+      mouth.setFaceFrame(2);
+    }
+    else if (missedCounter >= 2) {
+      mouth.setFaceFrame(1);
     }
   }
 

@@ -50,6 +50,9 @@ function Mouth(openKey1, openKey2, closedKey, faceKey, eyesKey) {
   this.maxTimeToNextMouthAnchor = 3000;
 
   this.spFace = game.add.sprite(startPos.x, startPos.y, faceKey);
+  // Face is a spritesheet. Setting initial face to initial frame.
+  this.spFace.frame = 0;
+
   this.spEyes = game.add.sprite(startPos.x, startPos.y, eyesKey);
   this.openState1 = {
     sprite: game.add.sprite(startPos.x, startPos.y, openKey1),
@@ -293,4 +296,11 @@ Mouth.prototype.hitDetect = function(otherSprite) {
   }
 
   return false;
+}
+
+Mouth.prototype.setFaceFrame = function(frame) {
+  if (frame < 0) {
+    console.log('Invalid frame index for face: ' + frame);
+  }
+  this.spFace.frame = frame;
 }
