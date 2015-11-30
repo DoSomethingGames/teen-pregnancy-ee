@@ -15,7 +15,6 @@ var state = {
         var style = { font: "24px Arial", fill: "#fff", align: "center" };
         var t = game.add.text(this.world.centerX, this.world.centerY, text, style);
         t.anchor.setTo(0.5, 0.5);
-
     },
     preload: function() {
         // STate preload logic goes here
