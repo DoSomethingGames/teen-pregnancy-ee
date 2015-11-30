@@ -1,6 +1,7 @@
 function Game() {
   // Sprites
   var spBowl;
+  var spBowlBg;
   var spSpoonFood;
   var spSpoonDefault;
 
@@ -25,14 +26,19 @@ function Game() {
   var restartButton;
 
   function init() {
-
+    game.stage.backgroundColor = 0xffffff;
   }
 
   function preload() {
+    game.load.image('bowl-bg', 'assets/bowl_placeholder_full.png');
     game.load.image('bowl', 'assets/bowl_placeholder.png');
+
+    game.load.image('face', 'assets/face_placeholder.png');
+    game.load.image('eyes', 'assets/eyes_placeholder.png');
     game.load.image('mouth-closed', 'assets/mouth_closed_placeholder.png');
     game.load.image('mouth-open1', 'assets/mouth_open1_placeholder.png');
     game.load.image('mouth-open2', 'assets/mouth_open2_placeholder.png');
+
     game.load.image('spoon-food', 'assets/spoon_food_placeholder.png');
     game.load.image('spoon-nofood', 'assets/spoon_nofood_placeholder.png');
     game.load.image('restart-button', 'assets/restartButton.png');
@@ -50,9 +56,11 @@ function Game() {
     levelTime = startingTime * 1000;
     lastTimeCheck = (new Date()).getTime();
 
+    spBowlBg = game.add.sprite(575, 325, 'bowl-bg');
+    spBowlBg.anchor.setTo(0, 0);
     spBowl = game.add.sprite(575, 325, 'bowl');
 
-    mouth = new Mouth('mouth-open1', 'mouth-open2', 'mouth-closed');
+    mouth = new Mouth('mouth-open1', 'mouth-open2', 'mouth-closed', 'face', 'eyes');
 
     spSpoonFood = game.add.sprite(0, 0, 'spoon-food');
     spSpoonDefault = game.add.sprite(0, 0, 'spoon-nofood');
@@ -88,6 +96,7 @@ function Game() {
     levelTime -= deltaTime;
     if (levelTime < 0) {
       restartButton = game.add.button(game.world.centerX, game.world.centerY, 'restart-button', null, null, 2, 1, 0);
+      restartButton.anchor.setTo(0.5, 0.5);
       restartButton.inputEnabled = true;
       restartButton.events.onInputUp.add(restartGame);
       return;

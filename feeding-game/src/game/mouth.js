@@ -1,20 +1,35 @@
-var graphics;
-function Mouth(openKey1, openKey2, closedKey) {
+var debugGraphics;
+
+function Mouth(openKey1, openKey2, closedKey, faceKey, eyesKey) {
   var ex1, ex2, ey1, ey2;
 
-  var startPos = {x: 300, y: 250};
+  var startPos = {x: 300, y: 300};
 
   this.currentState = 'open1';
   this.currentPos = {x: startPos.x, y: startPos.y};
   this.nextPos = {x: startPos.x, y: startPos.y};
 
   this.validPositions = [
-    {x: 250, y: 250},
-    {x: 300, y: 250},
-    {x: 350, y: 250},
-    {x: 250, y: 150},
-    {x: 300, y: 150},
-    {x: 350, y: 150}
+    {x: 250, y: 300},
+    {x: 300, y: 300},
+    {x: 350, y: 300},
+    {x: 250, y: 200},
+    {x: 300, y: 200},
+    {x: 350, y: 200}
+  ];
+
+  this.eyeAnchors = [
+    {x: 0.5, y: 0.75},
+    {x: 0.4, y: 0.75},
+    {x: 0.6, y: 0.75}
+  ];
+
+  this.mouthAnchors = [
+    {x: 0.5, y: 0.5},
+    {x: 0.6, y: 0.4},
+    {x: 0.4, y: 0.4},
+    {x: 0.6, y: 0.5},
+    {x: 0.4, y: 0.5},
   ];
 
   // Velocity measured by # of px / 1000 ms
@@ -27,7 +42,15 @@ function Mouth(openKey1, openKey2, closedKey) {
   this.timeToNextState = 1500;
   this.minTimeToNextState = 1000;
   this.maxTimeToNextState = 3000;
+  this.timeToNextEyeAnchor = 3000;
+  this.minTimeToNextEyeAnchor = 1500;
+  this.maxTimeToNextEyeAnchor = 3000;
+  this.timeToNextMouthAnchor = 3000;
+  this.minTimeToNextMouthAnchor = 1500;
+  this.maxTimeToNextMouthAnchor = 3000;
 
+  this.spFace = game.add.sprite(startPos.x, startPos.y, faceKey);
+  this.spEyes = game.add.sprite(startPos.x, startPos.y, eyesKey);
   this.openState1 = {
     sprite: game.add.sprite(startPos.x, startPos.y, openKey1),
     ellipse: undefined
@@ -44,9 +67,12 @@ function Mouth(openKey1, openKey2, closedKey) {
   };
 
   // Set anchor and visibility
-  this.openState1.sprite.anchor.setTo(0.5, 0.5);
-  this.openState2.sprite.anchor.setTo(0.5, 0.5);
-  this.closedState.sprite.anchor.setTo(0.5, 0.5);
+  this.openState1.sprite.anchor.setTo(this.mouthAnchors[0].x, this.mouthAnchors[0].y);
+  this.openState2.sprite.anchor.setTo(this.mouthAnchors[0].x, this.mouthAnchors[0].y);
+  this.closedState.sprite.anchor.setTo(this.mouthAnchors[0].x, this.mouthAnchors[0].y);
+  this.spFace.anchor.setTo(0.5, 0.75);
+  this.spEyes.anchor.setTo(this.eyeAnchors[0].x, this.eyeAnchors[0].y);
+
   this.openState1.sprite.visible = true;
   this.openState2.sprite.visible = false;
   this.closedState.sprite.visible = false;
@@ -60,16 +86,23 @@ function Mouth(openKey1, openKey2, closedKey) {
   this.openState2.ellipse = new Phaser.Ellipse(ex2, ey2, this.openState2.sprite.width, this.openState2.sprite.height);
 
   // DEBUG DRAW ELLIPSE
+  debugGraphics = game.add.graphics(0, 0);
   /*
-  graphics = game.add.graphics(0, 0);
-  graphics.lineStyle(1, 0xffd900);
+  debugGraphics.lineStyle(1, 0xffd900);
   var ew1 = Math.floor(this.openState1.sprite.width / 2);
   var eh1 = Math.floor(this.openState1.sprite.height / 2);
-  graphics.drawEllipse(startPos.x, startPos.y, ew1, eh1);
-  graphics.lineStyle(1, 0x009dff);
+  debugGraphics.drawEllipse(startPos.x, startPos.y, ew1, eh1);
+  debugGraphics.lineStyle(1, 0x009dff);
   var ew2 = Math.floor(this.openState2.sprite.width / 2);
   var eh2 = Math.floor(this.openState2.sprite.height / 2);
-  graphics.drawEllipse(startPos.x, startPos.y, ew2, eh2);
+  debugGraphics.drawEllipse(startPos.x, startPos.y, ew2, eh2);
+  */
+  // DEBUG DRAW VALID POSITIONS
+  /*
+  debugGraphics.beginFill(0x0000ff, 1);
+  for (var i = 0; i < this.validPositions.length; i++) {
+    debugGraphics.drawCircle(this.validPositions[i].x, this.validPositions[i].y, 3);
+  }
   */
 }
 
@@ -197,6 +230,35 @@ Mouth.prototype.update = function(deltaTime) {
     // Reset timer
     this.timeToNextState = Math.floor(Math.random() * (this.maxTimeToNextState - this.minTimeToNextState) + this.minTimeToNextState);
   }
+
+  // Eye anchor
+  if (this.timeToNextEyeAnchor > 0) {
+    this.timeToNextEyeAnchor -= deltaTime;
+  }
+  else {
+    // Set a new eye anchor
+    selection = Math.floor(Math.random() * this.eyeAnchors.length);
+    newEyeAnchor = this.eyeAnchors[selection];
+    this.spEyes.anchor.setTo(this.eyeAnchors[selection].x, this.eyeAnchors[selection].y);
+
+    // Reset timer
+    this.timeToNextEyeAnchor = Math.floor(Math.random() * (this.maxTimeToNextEyeAnchor - this.minTimeToNextEyeAnchor) + this.minTimeToNextEyeAnchor);
+  }
+
+  // Mouth anchor
+  if (this.timeToNextMouthAnchor > 0) {
+    this.timeToNextMouthAnchor -= deltaTime;
+  }
+  else {
+    // Set a new mouth anchor
+    selection = Math.floor(Math.random() * this.mouthAnchors.length);
+    this.openState1.sprite.anchor.setTo(this.mouthAnchors[selection].x, this.mouthAnchors[selection].y);
+    this.openState2.sprite.anchor.setTo(this.mouthAnchors[selection].x, this.mouthAnchors[selection].y);
+    this.closedState.sprite.anchor.setTo(this.mouthAnchors[selection].x, this.mouthAnchors[selection].y);
+
+    // Reset timer
+    this.timeToNextMouthAnchor = Math.floor(Math.random() * (this.maxTimeToNextMouthAnchor - this.minTimeToNextMouthAnchor) + this.minTimeToNextMouthAnchor);
+  }
 }
 
 Mouth.prototype.updatePosition = function(x, y) {
@@ -206,6 +268,10 @@ Mouth.prototype.updatePosition = function(x, y) {
   this.openState2.sprite.position.y = y;
   this.closedState.sprite.position.x = x;
   this.closedState.sprite.position.y = y;
+  this.spFace.position.x = x;
+  this.spFace.position.y = y;
+  this.spEyes.position.x = x;
+  this.spEyes.position.y = y;
 
   this.openState1.ellipse.x = x - Math.floor(this.openState1.sprite.width / 2);
   this.openState1.ellipse.y = y - Math.floor(this.openState1.sprite.height / 2);

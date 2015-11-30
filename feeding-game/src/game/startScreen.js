@@ -4,26 +4,27 @@ function StartScreen() {
 
   console.log('in startScreen');
 
-	function init() {
+  function init() {
     startButton = null;
-	}
+  }
 
-	function preload() {
+  function preload() {
     game.load.image('background', 'assets/startScreen.png');
     game.load.image('startButton', 'assets/startButton.png');
-	}
+  }
 
-	function create() {
+  function create() {
     background = game.add.tileSprite(0, 0, 800, 600, 'background');
     startButton = game.add.button(game.world.centerX, game.world.centerY, 'startButton', null, null, 2, 1, 0);
+    startButton.anchor.setTo(0.5, 0.5);
     startButton.inputEnabled = true;
     startButton.events.onInputUp.add(transitionToNextState);
     //startButton.events.onInputOver.add()
-	}
+  }
 
-	function update() {
+  function update() {
 
-	}
+  }
 
   function transitionToNextState() {
     var properties = {alpha: 0};
@@ -44,12 +45,12 @@ function StartScreen() {
     game.state.start('game');
   }
 
-	return {
-		init: init,
+  return {
+    init: init,
     preload: preload,
     create: create,
     update: update
-	}
+  }
 }
 
 game.state.add('start-screen', new StartScreen());
