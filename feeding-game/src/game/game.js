@@ -31,7 +31,7 @@ function Game() {
 
   function preload() {
     game.load.image('bowl-bg', 'assets/bowl_placeholder_full.png');
-    game.load.image('bowl', 'assets/bowl_placeholder.png');
+    game.load.image('bowl', 'assets/bowl.png');
 
     game.load.spritesheet('face', 'assets/face_spritesheet_placeholder.png', 256, 256);
     game.load.image('eyes', 'assets/eyes_placeholder.png');
@@ -56,9 +56,7 @@ function Game() {
     levelTime = startingTime * 1000;
     lastTimeCheck = (new Date()).getTime();
 
-    spBowlBg = game.add.sprite(575, 325, 'bowl-bg');
-    spBowlBg.anchor.setTo(0, 0);
-    spBowl = game.add.sprite(575, 325, 'bowl');
+    spBowl = game.add.sprite(475, 325, 'bowl');
 
     mouth = new Mouth('mouth-open1', 'mouth-open2', 'mouth-closed', 'face', 'eyes');
 
