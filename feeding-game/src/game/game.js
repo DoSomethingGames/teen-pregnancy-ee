@@ -35,7 +35,7 @@ function Game() {
   }
 
   function preload() {
-    // game.load.image('body', 'assets/body_placeholder.png');
+    game.load.image('bg', 'assets/kitchen_bg.jpg');
     game.load.spritesheet('body', 'assets/body_placeholder_spritesheet.png', 450, 183);
     game.load.image('bowl-bg', 'assets/bowl_placeholder_full.png');
     game.load.image('bowl', 'assets/bowl.png');
@@ -55,23 +55,23 @@ function Game() {
   }
 
   function create() {
-    var textStyle = {
-      font: '16px Helvetica',
-      fill: '#ff0000'
-    };
-    textScore = game.add.text(700, 10, 'Noms: 0', textStyle);
-    textMissed = game.add.text(700, 30, 'Missed: 0', textStyle);
-    textTimer = game.add.text(700, 50, 'Timer: 0:' + startingTime, textStyle);
-
     levelTime = startingTime * 1000;
     lastTimeCheck = (new Date()).getTime();
 
+    // Background
+    game.add.sprite(0, 0, 'bg');
+
+    // Body
     spBody = game.add.sprite(50, 297, 'body');
     spBody.frame = 0;
+
+    // Bowl
     spBowl = game.add.sprite(475, 325, 'bowl');
 
+    // Mouth
     mouth = new Mouth('mouth-open1', 'mouth-open2', 'mouth-closed', 'face', 'eyes');
 
+    // Spoon
     spSpoonFood = game.add.sprite(0, 0, 'spoon-food');
     spSpoonDefault = game.add.sprite(0, 0, 'spoon-nofood');
 
@@ -92,6 +92,16 @@ function Game() {
     spSpoonFood.events.onInputUp.add(onInputUp, this);
     mouth.onInputUp(onInputUp, this);
 
+    // Debug temporary text
+    var textStyle = {
+      font: '16px Helvetica',
+      fill: '#ff0000'
+    };
+    textScore = game.add.text(700, 10, 'Noms: 0', textStyle);
+    textMissed = game.add.text(700, 30, 'Missed: 0', textStyle);
+    textTimer = game.add.text(700, 50, 'Timer: 0:' + startingTime, textStyle);
+
+    // Audio
     fxNom = game.add.audio('nom');
     fxSplat = game.add.audio('splat');
   }
