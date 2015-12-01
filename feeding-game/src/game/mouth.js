@@ -3,19 +3,19 @@ var debugGraphics;
 function Mouth(openKey1, openKey2, closedKey, faceKey, eyesKey) {
   var ex1, ex2, ey1, ey2;
 
-  var startPos = {x: 300, y: 300};
+  var startPos = {x: 250, y: 325};
 
   this.currentState = 'open1';
   this.currentPos = {x: startPos.x, y: startPos.y};
   this.nextPos = {x: startPos.x, y: startPos.y};
 
   this.validPositions = [
+    {x: 200, y: 325},
+    {x: 250, y: 325},
+    {x: 300, y: 325},
+    {x: 200, y: 300},
     {x: 250, y: 300},
-    {x: 300, y: 300},
-    {x: 350, y: 300},
-    {x: 250, y: 200},
-    {x: 300, y: 200},
-    {x: 350, y: 200}
+    {x: 300, y: 300}
   ];
 
   this.eyeAnchors = [

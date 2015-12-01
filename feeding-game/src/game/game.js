@@ -1,5 +1,6 @@
 function Game() {
   // Sprites
+  var spBody;
   var spBowl;
   var spBowlBg;
   var spSpoonFood;
@@ -34,6 +35,8 @@ function Game() {
   }
 
   function preload() {
+    // game.load.image('body', 'assets/body_placeholder.png');
+    game.load.spritesheet('body', 'assets/body_placeholder_spritesheet.png', 450, 183);
     game.load.image('bowl-bg', 'assets/bowl_placeholder_full.png');
     game.load.image('bowl', 'assets/bowl.png');
 
@@ -63,6 +66,8 @@ function Game() {
     levelTime = startingTime * 1000;
     lastTimeCheck = (new Date()).getTime();
 
+    spBody = game.add.sprite(50, 297, 'body');
+    spBody.frame = 0;
     spBowl = game.add.sprite(475, 325, 'bowl');
 
     mouth = new Mouth('mouth-open1', 'mouth-open2', 'mouth-closed', 'face', 'eyes');
@@ -168,12 +173,15 @@ function Game() {
 
     if (missedCounter >= 6) {
       mouth.setFaceFrame(3);
+      spBody.frame = 3;
     }
     else if (missedCounter >= 4) {
       mouth.setFaceFrame(2);
+      spBody.frame = 2;
     }
     else if (missedCounter >= 2) {
       mouth.setFaceFrame(1);
+      spBody.frame = 1;
     }
 
     fxSplat.play();
