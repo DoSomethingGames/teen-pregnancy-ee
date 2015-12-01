@@ -25,7 +25,7 @@ function Game() {
   // More text
   var textTimer;
   var levelTime;
-  var startingTime = 30;
+  var startingTime = 21;
 
   // Restart button
   var restartButton;
@@ -94,12 +94,17 @@ function Game() {
 
     // Debug temporary text
     var textStyle = {
-      font: '16px Helvetica',
-      fill: '#ff0000'
+      font: '20px PressStart2P',
+      fill: '#000000'
     };
-    textScore = game.add.text(700, 10, 'Noms: 0', textStyle);
-    textMissed = game.add.text(700, 30, 'Missed: 0', textStyle);
-    textTimer = game.add.text(700, 50, 'Timer: 0:' + startingTime, textStyle);
+    var textTimerStyle = {
+      font: '32px PressStart2P',
+      fill: '#000000'
+    }
+    textScore = game.add.text(8, 424, 'Noms: 0', textStyle);
+    textMissed = game.add.text(8, 452, 'Miss: 0', textStyle);
+    textTimer = game.add.text(400, 8, '0:' + startingTime, textTimerStyle);
+    textTimer.anchor.setTo(0.5, 0);
 
     // Audio
     fxNom = game.add.audio('nom');
@@ -130,7 +135,7 @@ function Game() {
         timerText += '0'
       }
       timerText += Math.floor(levelTime / 1000);
-      textTimer.setText('Timer: ' + timerText);
+      textTimer.setText(timerText);
     }
 
     // Update mouth position, state and movement
@@ -179,7 +184,7 @@ function Game() {
 
   function feedMissed() {
     missedCounter++;
-    textMissed.setText('Missed: ' + missedCounter);
+    textMissed.setText('Miss: ' + missedCounter);
 
     if (missedCounter >= 6) {
       mouth.setFaceFrame(3);
