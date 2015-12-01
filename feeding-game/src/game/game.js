@@ -5,6 +5,10 @@ function Game() {
   var spSpoonFood;
   var spSpoonDefault;
 
+  // Audio
+  var fxNom;
+  var fxSplat;
+
   // Timers
   var lastTimeCheck = 0;
 
@@ -42,6 +46,9 @@ function Game() {
     game.load.image('spoon-food', 'assets/spoon_food.png');
     game.load.image('spoon-nofood', 'assets/spoon_empty.png');
     game.load.image('restart-button', 'assets/restartButton.png');
+
+    game.load.audio('nom', 'assets/sounds/nom.wav');
+    game.load.audio('splat', 'assets/sounds/splat.wav');
   }
 
   function create() {
@@ -79,6 +86,9 @@ function Game() {
     spBowl.events.onInputUp.add(onInputUp, this);
     spSpoonFood.events.onInputUp.add(onInputUp, this);
     mouth.onInputUp(onInputUp, this);
+
+    fxNom = game.add.audio('nom');
+    fxSplat = game.add.audio('splat');
   }
 
   function update() {
@@ -137,13 +147,19 @@ function Game() {
       spSpoonDefault.visible = true;
 
       if (mouth.hitDetect(spSpoonFood)) {
-        scoreCounter++;
-        textScore.setText('Noms: ' + scoreCounter);
+        feedSuccess();
       }
       else {
         feedMissed();
       }
     }
+  }
+
+  function feedSuccess() {
+    scoreCounter++;
+    textScore.setText('Noms: ' + scoreCounter);
+
+    fxNom.play();
   }
 
   function feedMissed() {
@@ -159,6 +175,8 @@ function Game() {
     else if (missedCounter >= 2) {
       mouth.setFaceFrame(1);
     }
+
+    fxSplat.play();
   }
 
   function restartGame() {
