@@ -1,9 +1,14 @@
 function Game() {
   // Sprites
+  var spBody;
   var spBowl;
   var spBowlBg;
   var spSpoonFood;
   var spSpoonDefault;
+
+  // Audio
+  var fxNom;
+  var fxSplat;
 
   // Timers
   var lastTimeCheck = 0;
@@ -30,44 +35,49 @@ function Game() {
   }
 
   function preload() {
+    game.load.image('bg', 'assets/kitchen_bg.jpg');
+    game.load.spritesheet('body', 'assets/body_placeholder_spritesheet.png', 450, 183);
     game.load.image('bowl-bg', 'assets/bowl_placeholder_full.png');
-    game.load.image('bowl', 'assets/bowl_placeholder.png');
+    game.load.image('bowl', 'assets/bowl.png');
 
-    game.load.image('face', 'assets/face_placeholder.png');
+    game.load.spritesheet('face', 'assets/face_spritesheet_placeholder.png', 256, 256);
     game.load.image('eyes', 'assets/eyes_placeholder.png');
     game.load.image('mouth-closed', 'assets/mouth_closed_placeholder.png');
     game.load.image('mouth-open1', 'assets/mouth_open1_placeholder.png');
     game.load.image('mouth-open2', 'assets/mouth_open2_placeholder.png');
 
-    game.load.image('spoon-food', 'assets/spoon_food_placeholder.png');
-    game.load.image('spoon-nofood', 'assets/spoon_nofood_placeholder.png');
+    game.load.image('spoon-food', 'assets/spoon_food.png');
+    game.load.image('spoon-nofood', 'assets/spoon_empty.png');
     game.load.image('restart-button', 'assets/restartButton.png');
+
+    game.load.audio('nom', 'assets/sounds/nom.wav');
+    game.load.audio('splat', 'assets/sounds/splat.wav');
   }
 
   function create() {
-    var textStyle = {
-      font: '16px Helvetica',
-      fill: '#ff0000'
-    };
-    textScore = game.add.text(700, 10, 'Noms: 0', textStyle);
-    textMissed = game.add.text(700, 30, 'Missed: 0', textStyle);
-    textTimer = game.add.text(700, 50, 'Timer: 0:' + startingTime, textStyle);
-
     levelTime = startingTime * 1000;
     lastTimeCheck = (new Date()).getTime();
 
-    spBowlBg = game.add.sprite(575, 325, 'bowl-bg');
-    spBowlBg.anchor.setTo(0, 0);
-    spBowl = game.add.sprite(575, 325, 'bowl');
+    // Background
+    game.add.sprite(0, 0, 'bg');
 
+    // Body
+    spBody = game.add.sprite(50, 297, 'body');
+    spBody.frame = 0;
+
+    // Bowl
+    spBowl = game.add.sprite(475, 325, 'bowl');
+
+    // Mouth
     mouth = new Mouth('mouth-open1', 'mouth-open2', 'mouth-closed', 'face', 'eyes');
 
+    // Spoon
     spSpoonFood = game.add.sprite(0, 0, 'spoon-food');
     spSpoonDefault = game.add.sprite(0, 0, 'spoon-nofood');
 
     // Set anchor to middle of sprite
-    spSpoonFood.anchor.setTo(0.5, 0.5);
-    spSpoonDefault.anchor.setTo(0.5, 0.5);
+    spSpoonFood.anchor.setTo(0.17, 0.7);
+    spSpoonDefault.anchor.setTo(0.17, 0.7);
 
     // Some sprites stay hidden until they're needed
     spSpoonFood.visible = false;
@@ -81,6 +91,19 @@ function Game() {
     spBowl.events.onInputUp.add(onInputUp, this);
     spSpoonFood.events.onInputUp.add(onInputUp, this);
     mouth.onInputUp(onInputUp, this);
+
+    // Debug temporary text
+    var textStyle = {
+      font: '16px Helvetica',
+      fill: '#ff0000'
+    };
+    textScore = game.add.text(700, 10, 'Noms: 0', textStyle);
+    textMissed = game.add.text(700, 30, 'Missed: 0', textStyle);
+    textTimer = game.add.text(700, 50, 'Timer: 0:' + startingTime, textStyle);
+
+    // Audio
+    fxNom = game.add.audio('nom');
+    fxSplat = game.add.audio('splat');
   }
 
   function update() {
@@ -139,14 +162,39 @@ function Game() {
       spSpoonDefault.visible = true;
 
       if (mouth.hitDetect(spSpoonFood)) {
-        scoreCounter++;
-        textScore.setText('Noms: ' + scoreCounter);
+        feedSuccess();
       }
       else {
-        missedCounter++;
-        textMissed.setText('Missed: ' + missedCounter);
+        feedMissed();
       }
     }
+  }
+
+  function feedSuccess() {
+    scoreCounter++;
+    textScore.setText('Noms: ' + scoreCounter);
+
+    fxNom.play();
+  }
+
+  function feedMissed() {
+    missedCounter++;
+    textMissed.setText('Missed: ' + missedCounter);
+
+    if (missedCounter >= 6) {
+      mouth.setFaceFrame(3);
+      spBody.frame = 3;
+    }
+    else if (missedCounter >= 4) {
+      mouth.setFaceFrame(2);
+      spBody.frame = 2;
+    }
+    else if (missedCounter >= 2) {
+      mouth.setFaceFrame(1);
+      spBody.frame = 1;
+    }
+
+    fxSplat.play();
   }
 
   function restartGame() {
