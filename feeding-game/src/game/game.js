@@ -1,3 +1,5 @@
+var gameGraphics;
+
 function Game() {
   // Sprites
   var spBody;
@@ -7,11 +9,16 @@ function Game() {
   var spSpoonDefault;
 
   // Audio
+  var fxBeep;
   var fxNom;
   var fxSplat;
+  var fxVictory;
 
   // Timers
   var lastTimeCheck = 0;
+
+  // Beeps in the final seconds of each game
+  var beepCountdown = 5;
 
   // Mouth controller
   var mouth;
@@ -21,14 +28,30 @@ function Game() {
   var scoreCounter = 0;
   var textMissed;
   var missedCounter = 0;
+  var scoreGoal = 20;
+  var scoreBar;
 
   // More text
   var textTimer;
   var levelTime;
-  var startingTime = 30;
+  var startingTime = 21;
 
   // Restart button
   var restartButton;
+
+  // Text styles
+  var textStyle = {
+    font: '20px PressStart2P',
+    fill: '#000000'
+  };
+  var textTimerStyle = {
+    font: '32px PressStart2P',
+    fill: '#000000'
+  };
+  var textTimerStyleCoundown = {
+    font: '32px PressStart2P',
+    fill: '#ff0000'
+  };
 
   function init() {
     game.stage.backgroundColor = 0xffffff;
@@ -50,11 +73,15 @@ function Game() {
     game.load.image('spoon-nofood', 'assets/spoon_empty.png');
     game.load.image('restart-button', 'assets/restartButton.png');
 
+    game.load.audio('beep', 'assets/sounds/beep.wav');
     game.load.audio('nom', 'assets/sounds/nom.wav');
     game.load.audio('splat', 'assets/sounds/splat.wav');
+    game.load.audio('victory', 'assets/sounds/baby_laugh.wav');
   }
 
   function create() {
+    var textFillBar;
+
     levelTime = startingTime * 1000;
     lastTimeCheck = (new Date()).getTime();
 
@@ -93,17 +120,24 @@ function Game() {
     mouth.onInputUp(onInputUp, this);
 
     // Debug temporary text
-    var textStyle = {
-      font: '16px Helvetica',
-      fill: '#ff0000'
-    };
-    textScore = game.add.text(700, 10, 'Noms: 0', textStyle);
-    textMissed = game.add.text(700, 30, 'Missed: 0', textStyle);
-    textTimer = game.add.text(700, 50, 'Timer: 0:' + startingTime, textStyle);
+    textScore = game.add.text(8, 424, '', textStyle);
+    textMissed = game.add.text(8, 452, '', textStyle);
+    textTimer = game.add.text(400, 8, '', textTimerStyle);
+    textTimer.anchor.setTo(0.5, 0);
+
+    textScore.setText('Noms: 0');
+    textMissed.setText('Miss: 0');
+    textTimer.setText('0:' + startingTime);
+
+    textFillBar = game.add.text(8, 8, 'Full!', textStyle);
+    gameGraphics = game.add.graphics();
+    drawFillBar();
 
     // Audio
+    fxBeep = game.add.audio('beep');
     fxNom = game.add.audio('nom');
     fxSplat = game.add.audio('splat');
+    fxVictory = game.add.audio('victory');
   }
 
   function update() {
@@ -130,15 +164,25 @@ function Game() {
         timerText += '0'
       }
       timerText += Math.floor(levelTime / 1000);
-      textTimer.setText('Timer: ' + timerText);
+      textTimer.setText(timerText);
+
+      // Change color in the final 5 seconds
+      if (levelTime < 6000) {
+        textTimer.setStyle(textTimerStyleCoundown);
+      }
+
+      if (levelTime <= (beepCountdown + 1) * 1000) {
+        fxBeep.play();
+        beepCountdown--;
+      }
+
+      // Update mouth position, state and movement
+      mouth.update(deltaTime);
+
+      // Spoon position follows the mouse
+      spSpoonFood.position = game.input.position;
+      spSpoonDefault.position = game.input.position;
     }
-
-    // Update mouth position, state and movement
-    mouth.update(deltaTime);
-
-    // Spoon position follows the mouse
-    spSpoonFood.position = game.input.position;
-    spSpoonDefault.position = game.input.position;
   }
 
   function render() {
@@ -149,6 +193,7 @@ function Game() {
     if (sprite.key == 'bowl') {
       spSpoonFood.visible = true;
       spSpoonDefault.visible = false;
+      // fxSplat.play();
     }
   }
 
@@ -174,12 +219,18 @@ function Game() {
     scoreCounter++;
     textScore.setText('Noms: ' + scoreCounter);
 
+    drawFillBar();
+
     fxNom.play();
+
+    if (scoreCounter == scoreGoal) {
+      fxVictory.play();
+    }
   }
 
   function feedMissed() {
     missedCounter++;
-    textMissed.setText('Missed: ' + missedCounter);
+    textMissed.setText('Miss: ' + missedCounter);
 
     if (missedCounter >= 6) {
       mouth.setFaceFrame(3);
@@ -195,6 +246,43 @@ function Game() {
     }
 
     fxSplat.play();
+  }
+
+  function drawFillBar() {
+    var height = 350;
+    var width = 52;
+    var x0 = 12;
+    var y0 = 50;
+    var colorOutlineDefault = 0x000000;
+    var colorOutlineWin = 0xffffff;
+    var colorOutline = scoreCounter >= scoreGoal ? colorOutlineWin : colorOutlineDefault;
+    var colorFillDefault = 0x117024;
+    var colorFillWin = 0xfefe56;
+    var colorFill = scoreCounter >= scoreGoal ? colorFillWin : colorFillDefault;
+    var interval = Math.floor(height / scoreGoal);
+    var scoreBarHeight = scoreCounter >= scoreGoal ? height : interval * scoreCounter;
+    var scoreBarY = height - scoreBarHeight + y0;
+
+    gameGraphics.lineStyle(1, colorFill, 1);
+    gameGraphics.beginFill(colorFill, 1);
+    scoreBar = gameGraphics.drawRect(x0, scoreBarY, width, scoreBarHeight);
+    gameGraphics.endFill();
+
+    gameGraphics.lineStyle(4, colorOutline, 1);
+    gameGraphics.moveTo(x0, y0);
+    gameGraphics.lineTo(x0, y0 + height);
+
+    gameGraphics.lineStyle(4, colorOutline, 1);
+    gameGraphics.moveTo(x0, y0 + height);
+    gameGraphics.lineTo(x0 + width, y0 + height);
+
+    gameGraphics.lineStyle(4, colorOutline, 1);
+    gameGraphics.moveTo(x0 + width, y0 + height);
+    gameGraphics.lineTo(x0 + width, y0);
+
+    gameGraphics.lineStyle(4, colorOutline, 1);
+    gameGraphics.moveTo(x0 + width, y0);
+    gameGraphics.lineTo(x0, y0);
   }
 
   function restartGame() {

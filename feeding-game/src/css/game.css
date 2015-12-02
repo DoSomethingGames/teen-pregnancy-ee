@@ -1,4 +1,8 @@
-﻿body {
+﻿@font-face {
+  font-family: 'PressStart2P';
+  src: url('../assets/fonts/PressStart2P.ttf') format('truetype');
+}
+body {
     background: #333;
     margin: 0;
     padding: 0;
