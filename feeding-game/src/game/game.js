@@ -13,6 +13,9 @@ function Game() {
   // Timers
   var lastTimeCheck = 0;
 
+  // Beeps in the final seconds of each game
+  var beepCountdown = 5;
+
   // Mouth controller
   var mouth;
 
@@ -29,6 +32,20 @@ function Game() {
 
   // Restart button
   var restartButton;
+
+  // Text styles
+  var textStyle = {
+    font: '20px PressStart2P',
+    fill: '#000000'
+  };
+  var textTimerStyle = {
+    font: '32px PressStart2P',
+    fill: '#000000'
+  };
+  var textTimerStyleCoundown = {
+    font: '32px PressStart2P',
+    fill: '#ff0000'
+  };
 
   function init() {
     game.stage.backgroundColor = 0xffffff;
@@ -50,6 +67,7 @@ function Game() {
     game.load.image('spoon-nofood', 'assets/spoon_empty.png');
     game.load.image('restart-button', 'assets/restartButton.png');
 
+    game.load.audio('beep', 'assets/sounds/beep.wav');
     game.load.audio('nom', 'assets/sounds/nom.wav');
     game.load.audio('splat', 'assets/sounds/splat.wav');
   }
@@ -93,14 +111,6 @@ function Game() {
     mouth.onInputUp(onInputUp, this);
 
     // Debug temporary text
-    var textStyle = {
-      font: '20px PressStart2P',
-      fill: '#000000'
-    };
-    var textTimerStyle = {
-      font: '32px PressStart2P',
-      fill: '#000000'
-    };
     textScore = game.add.text(8, 424, '', textStyle);
     textMissed = game.add.text(8, 452, '', textStyle);
     textTimer = game.add.text(400, 8, '', textTimerStyle);
@@ -111,6 +121,7 @@ function Game() {
     textTimer.setText('0:' + startingTime);
 
     // Audio
+    fxBeep = game.add.audio('beep');
     fxNom = game.add.audio('nom');
     fxSplat = game.add.audio('splat');
   }
@@ -140,14 +151,24 @@ function Game() {
       }
       timerText += Math.floor(levelTime / 1000);
       textTimer.setText(timerText);
+
+      // Change color in the final 5 seconds
+      if (levelTime < 6000) {
+        textTimer.setStyle(textTimerStyleCoundown);
+      }
+
+      if (levelTime <= (beepCountdown + 1) * 1000) {
+        fxBeep.play();
+        beepCountdown--;
+      }
+
+      // Update mouth position, state and movement
+      mouth.update(deltaTime);
+
+      // Spoon position follows the mouse
+      spSpoonFood.position = game.input.position;
+      spSpoonDefault.position = game.input.position;
     }
-
-    // Update mouth position, state and movement
-    mouth.update(deltaTime);
-
-    // Spoon position follows the mouse
-    spSpoonFood.position = game.input.position;
-    spSpoonDefault.position = game.input.position;
   }
 
   function render() {
