@@ -100,11 +100,15 @@ function Game() {
     var textTimerStyle = {
       font: '32px PressStart2P',
       fill: '#000000'
-    }
-    textScore = game.add.text(8, 424, 'Noms: 0', textStyle);
-    textMissed = game.add.text(8, 452, 'Miss: 0', textStyle);
-    textTimer = game.add.text(400, 8, '0:' + startingTime, textTimerStyle);
+    };
+    textScore = game.add.text(8, 424, '', textStyle);
+    textMissed = game.add.text(8, 452, '', textStyle);
+    textTimer = game.add.text(400, 8, '', textTimerStyle);
     textTimer.anchor.setTo(0.5, 0);
+
+    textScore.setText('Noms: 0');
+    textMissed.setText('Miss: 0');
+    textTimer.setText('0:' + startingTime);
 
     // Audio
     fxNom = game.add.audio('nom');
