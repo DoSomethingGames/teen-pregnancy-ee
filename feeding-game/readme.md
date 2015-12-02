@@ -38,3 +38,9 @@ concat: {
   }
 },
 ```
+
+#### Credits
+
+##### Audio
+
+[Baby sound](http://www.freesound.org/people/Robinhood76/sounds/75697/) - [license](http://creativecommons.org/licenses/by-nc/3.0/legalcode)

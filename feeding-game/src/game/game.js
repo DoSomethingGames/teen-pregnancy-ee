@@ -1,3 +1,5 @@
+var gameGraphics;
+
 function Game() {
   // Sprites
   var spBody;
@@ -7,8 +9,10 @@ function Game() {
   var spSpoonDefault;
 
   // Audio
+  var fxBeep;
   var fxNom;
   var fxSplat;
+  var fxVictory;
 
   // Timers
   var lastTimeCheck = 0;
@@ -24,6 +28,8 @@ function Game() {
   var scoreCounter = 0;
   var textMissed;
   var missedCounter = 0;
+  var scoreGoal = 20;
+  var scoreBar;
 
   // More text
   var textTimer;
@@ -70,9 +76,12 @@ function Game() {
     game.load.audio('beep', 'assets/sounds/beep.wav');
     game.load.audio('nom', 'assets/sounds/nom.wav');
     game.load.audio('splat', 'assets/sounds/splat.wav');
+    game.load.audio('victory', 'assets/sounds/baby_laugh.wav');
   }
 
   function create() {
+    var textFillBar;
+
     levelTime = startingTime * 1000;
     lastTimeCheck = (new Date()).getTime();
 
@@ -120,10 +129,15 @@ function Game() {
     textMissed.setText('Miss: 0');
     textTimer.setText('0:' + startingTime);
 
+    textFillBar = game.add.text(8, 8, 'Full!', textStyle);
+    gameGraphics = game.add.graphics();
+    drawFillBar();
+
     // Audio
     fxBeep = game.add.audio('beep');
     fxNom = game.add.audio('nom');
     fxSplat = game.add.audio('splat');
+    fxVictory = game.add.audio('victory');
   }
 
   function update() {
@@ -179,6 +193,7 @@ function Game() {
     if (sprite.key == 'bowl') {
       spSpoonFood.visible = true;
       spSpoonDefault.visible = false;
+      // fxSplat.play();
     }
   }
 
@@ -204,7 +219,13 @@ function Game() {
     scoreCounter++;
     textScore.setText('Noms: ' + scoreCounter);
 
+    drawFillBar();
+
     fxNom.play();
+
+    if (scoreCounter == scoreGoal) {
+      fxVictory.play();
+    }
   }
 
   function feedMissed() {
@@ -225,6 +246,43 @@ function Game() {
     }
 
     fxSplat.play();
+  }
+
+  function drawFillBar() {
+    var height = 350;
+    var width = 52;
+    var x0 = 12;
+    var y0 = 50;
+    var colorOutlineDefault = 0x000000;
+    var colorOutlineWin = 0xffffff;
+    var colorOutline = scoreCounter >= scoreGoal ? colorOutlineWin : colorOutlineDefault;
+    var colorFillDefault = 0x117024;
+    var colorFillWin = 0xfefe56;
+    var colorFill = scoreCounter >= scoreGoal ? colorFillWin : colorFillDefault;
+    var interval = Math.floor(height / scoreGoal);
+    var scoreBarHeight = scoreCounter >= scoreGoal ? height : interval * scoreCounter;
+    var scoreBarY = height - scoreBarHeight + y0;
+
+    gameGraphics.lineStyle(1, colorFill, 1);
+    gameGraphics.beginFill(colorFill, 1);
+    scoreBar = gameGraphics.drawRect(x0, scoreBarY, width, scoreBarHeight);
+    gameGraphics.endFill();
+
+    gameGraphics.lineStyle(4, colorOutline, 1);
+    gameGraphics.moveTo(x0, y0);
+    gameGraphics.lineTo(x0, y0 + height);
+
+    gameGraphics.lineStyle(4, colorOutline, 1);
+    gameGraphics.moveTo(x0, y0 + height);
+    gameGraphics.lineTo(x0 + width, y0 + height);
+
+    gameGraphics.lineStyle(4, colorOutline, 1);
+    gameGraphics.moveTo(x0 + width, y0 + height);
+    gameGraphics.lineTo(x0 + width, y0);
+
+    gameGraphics.lineStyle(4, colorOutline, 1);
+    gameGraphics.moveTo(x0 + width, y0);
+    gameGraphics.lineTo(x0, y0);
   }
 
   function restartGame() {
