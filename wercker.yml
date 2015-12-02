@@ -1,0 +1,34 @@
+# This references the default nodejs container from
+# the Docker Hub: https://registry.hub.docker.com/_/node/
+# If you want Nodesource's container you would reference nodesource/node
+# Read more about containers on our dev center
+# http://devcenter.wercker.com/docs/containers/index.html
+box: node
+
+build:
+  steps:
+  # Install the grunt-cli
+    - script:
+        name: install grunt-cli
+        code: sudo npm install -g grunt-cli
+
+    # Install dependencies specified in the package.json
+    - script:
+        name: npm install
+        code: |
+            cd feeding-game
+            npm install
+
+    # Grunt copy and concat tasks to build the project
+    - script:
+        name: grunt copy concat
+        code: |
+            cd feeding-game
+            grunt copy concat
+
+deploy:
+  steps:
+    # Deploy to gh-pages
+    - lukevivier/gh-pages:
+        token: $GIT_TOKEN
+        basedir: feeding-game/deploy
