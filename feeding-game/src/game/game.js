@@ -39,6 +39,12 @@ function Game() {
   // Restart button
   var restartButton;
 
+  // Boolean game has ended
+  var isGameOver = false;
+
+  // URL to level players up to
+  var campaignUrl = 'https://www.dosomething.org/us/campaigns/pregnancy-text';
+
   // Text styles
   var textStyle = {
     font: '20px PressStart2P',
@@ -72,6 +78,8 @@ function Game() {
     game.load.image('spoon-food', 'assets/spoon_food.png');
     game.load.image('spoon-nofood', 'assets/spoon_empty.png');
     game.load.image('restart-button', 'assets/restartButton.png');
+
+    game.load.image('campaign-button', 'assets/campaignButton.png');
 
     game.load.audio('beep', 'assets/sounds/beep.wav');
     game.load.audio('nom', 'assets/sounds/nom.wav');
@@ -145,6 +153,10 @@ function Game() {
     var deltaTime;
     var timerText;
 
+    if (isGameOver) {
+      return;
+    }
+
     currTime = (new Date()).getTime();
     deltaTime = currTime - lastTimeCheck;
     lastTimeCheck = currTime;
@@ -152,10 +164,7 @@ function Game() {
     // Game Time
     levelTime -= deltaTime;
     if (levelTime < 0) {
-      restartButton = game.add.button(game.world.centerX, game.world.centerY, 'restart-button', null, null, 2, 1, 0);
-      restartButton.anchor.setTo(0.5, 0.5);
-      restartButton.inputEnabled = true;
-      restartButton.events.onInputUp.add(restartGame);
+      endGame();
       return;
     }
     else {
@@ -193,7 +202,6 @@ function Game() {
     if (sprite.key == 'bowl') {
       spSpoonFood.visible = true;
       spSpoonDefault.visible = false;
-      // fxSplat.play();
     }
   }
 
@@ -283,6 +291,42 @@ function Game() {
     gameGraphics.lineStyle(4, colorOutline, 1);
     gameGraphics.moveTo(x0 + width, y0);
     gameGraphics.lineTo(x0, y0);
+  }
+
+  function endGame() {
+    var margin = 12;
+    var pitch;
+    var pitchButton;
+    var pitchButtonText = "Give It A Try";
+    var pitchText = "94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?";
+    var pitchStyle = {"font": "18px Arial", fill: "0x000000"};
+
+    isGameOver = true;
+
+    // Overlay background
+    gameGraphics.lineStyle(4, 0x000000, 1);
+    gameGraphics.beginFill(0xffffff, 1);
+    gameGraphics.drawRect(margin, margin, game.world.width - (margin * 2), game.world.height - (margin * 2));
+    gameGraphics.endFill();
+
+    // Pitch to level up to a campaign
+    pitch = game.add.text(game.world.centerX, margin * 3, pitchText, pitchStyle);
+    pitch.wordWrap = true;
+    pitch.wordWrapWidth = game.world.width - (margin * 6);
+    pitch.anchor.setTo(0.5, 0);
+
+    // Button to go to campaign
+    var px = game.world.centerX;
+    var py = pitch.position.y + margin * 6;
+    var pKey = 'campaign-button';
+    var pCallback = function() { window.open(campaignUrl,'_blank'); };
+    pitchButton = game.add.button(px, py, pKey, pCallback);
+    pitchButton.anchor.setTo(0.5, 0);
+
+    restartButton = game.add.button(game.world.centerX, game.world.centerY, 'restart-button', null, null, 2, 1, 0);
+    restartButton.anchor.setTo(0.5, 0.5);
+    restartButton.inputEnabled = true;
+    restartButton.events.onInputUp.add(restartGame);
   }
 
   function restartGame() {
