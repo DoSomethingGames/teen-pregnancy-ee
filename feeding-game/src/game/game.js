@@ -10,6 +10,7 @@ function Game() {
 
   // Audio
   var fxBeep;
+  var fxEndDing;
   var fxNom;
   var fxSplat;
   var fxVictory;
@@ -34,7 +35,7 @@ function Game() {
   // More text
   var textTimer;
   var levelTime;
-  var startingTime = 21;
+  var startingTime = 1;
 
   // Restart button
   var restartButton;
@@ -82,6 +83,7 @@ function Game() {
     game.load.image('campaign-button', 'assets/campaignButton.png');
 
     game.load.audio('beep', 'assets/sounds/beep.wav');
+    game.load.audio('end-ding', 'assets/sounds/end_ding.wav');
     game.load.audio('nom', 'assets/sounds/nom.wav');
     game.load.audio('splat', 'assets/sounds/splat.wav');
     game.load.audio('victory', 'assets/sounds/baby_laugh.wav');
@@ -143,6 +145,7 @@ function Game() {
 
     // Audio
     fxBeep = game.add.audio('beep');
+    fxEndDing = game.add.audio('end-ding');
     fxNom = game.add.audio('nom');
     fxSplat = game.add.audio('splat');
     fxVictory = game.add.audio('victory');
@@ -294,14 +297,24 @@ function Game() {
   }
 
   function endGame() {
+    isGameOver = true;
+
+    // Disable input detection on sprites
+    spBowl.inputEnabled = false;
+    spSpoonFood.inputEnabled = false;
+
+    fxEndDing.play();
+
+    setTimeout(showEndGameScreen, 1500);
+  }
+
+  function showEndGameScreen() {
     var margin = 12;
     var pitch;
     var pitchButton;
     var pitchButtonText = "Give It A Try";
     var pitchText = "94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?";
     var pitchStyle = {"font": "18px Arial", fill: "0x000000"};
-
-    isGameOver = true;
 
     // Overlay background
     gameGraphics.lineStyle(4, 0x000000, 1);
