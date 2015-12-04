@@ -32,13 +32,28 @@ function Game() {
   var scoreGoal = 20;
   var scoreBar;
 
+  // The score and missed counters map to more generic buckets of results
+  var foodStatusMap = [
+    {count: 20, status: 'Chubby Bunny'},
+    {count: 16, status: 'Satisfied'},
+    {count: 10, status: 'Meh'},
+    {count: 0, status: 'HANGRY'}
+  ];
+  var messStatusMap = [
+    {count: 6, status: 'A Hot Mess'},
+    {count: 4, status: 'Uhhhhh'},
+    {count: 2, status: 'Decent'},
+    {count: 0, status: 'Spotless'}
+  ];
+
   // More text
   var textTimer;
   var levelTime;
-  var startingTime = 1;
+  var startingTime = 21;
 
-  // Restart button
+  // Restart and share button for end game screen
   var restartButton;
+  var shareButton;
 
   // Boolean game has ended
   var isGameOver = false;
@@ -79,7 +94,7 @@ function Game() {
     game.load.image('spoon-food', 'assets/spoon_food.png');
     game.load.image('spoon-nofood', 'assets/spoon_empty.png');
     game.load.image('restart-button', 'assets/restartButton.png');
-
+    game.load.image('share-button', 'assets/shareButton.png');
     game.load.image('campaign-button', 'assets/campaignButton.png');
 
     game.load.audio('beep', 'assets/sounds/beep.wav');
@@ -314,7 +329,7 @@ function Game() {
     var pitchButton;
     var pitchButtonText = "Give It A Try";
     var pitchText = "94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?";
-    var pitchStyle = {"font": "18px Arial", fill: "0x000000"};
+    var pitchStyle = {"font": "18px Helvetica", fill: "0x000000"};
 
     // Overlay background
     gameGraphics.lineStyle(4, 0x000000, 1);
@@ -336,16 +351,57 @@ function Game() {
     pitchButton = game.add.button(px, py, pKey, pCallback);
     pitchButton.anchor.setTo(0.5, 0);
 
-    restartButton = game.add.button(game.world.centerX, game.world.centerY, 'restart-button', null, null, 2, 1, 0);
+    var rx = 650;
+    var ry = 300;
+    restartButton = game.add.button(rx, ry, 'restart-button');
     restartButton.anchor.setTo(0.5, 0.5);
     restartButton.inputEnabled = true;
     restartButton.events.onInputUp.add(restartGame);
+
+    var sx = 650;
+    var sy = 366;
+    shareButton = game.add.button(sx, sy, 'share-button');
+    shareButton.anchor.setTo(0.5, 0.5);
+    shareButton.inputEnabled = true;
+    shareButton.events.onInputUp.add(shareResults);
   }
 
   function restartGame() {
     restartButton.kill();
     game.state.add('game', new Game());
     game.state.start('game');
+  }
+
+  function shareResults() {
+    var intentUrl = "https://twitter.com/intent/tweet?text=";
+    var shareText = "My results from feeding a DoSomething.org virtual baby: " + getScoreMapping(scoreCounter) + " and " + getMissedMapping(missedCounter) + ".";
+    var shareUrl = intentUrl + shareText;
+
+    window.open(shareUrl, '_blank');
+  }
+
+  function getScoreMapping(val) {
+    var i;
+
+    for (i = 0; i < foodStatusMap.length; i++) {
+      if (scoreCounter >= foodStatusMap[i].count) {
+        return foodStatusMap[i].status;
+      }
+    }
+
+    return '';
+  }
+
+  function getMissedMapping(val) {
+    var i;
+
+    for (i = 0; i < messStatusMap.length; i++) {
+      if (missedCounter >= messStatusMap[i].count) {
+        return messStatusMap[i].status;
+      }
+    }
+
+    return '';
   }
 
   return {
