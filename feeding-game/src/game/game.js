@@ -34,16 +34,16 @@ function Game() {
 
   // The score and missed counters map to more generic buckets of results
   var foodStatusMap = [
-    {count: 20, status: 'Chubby Bunny'},
-    {count: 16, status: 'Satisfied'},
-    {count: 10, status: 'Meh'},
-    {count: 0, status: 'HANGRY'}
+    {count: 20, status: 'Chubby Bunny', key: 'mouth-open1'},
+    {count: 16, status: 'Satisfied', key: 'mouth-open2'},
+    {count: 10, status: 'Meh', key: 'mouth-closed'},
+    {count: 0, status: 'HANGRY', key: 'mouth-open1'}
   ];
   var messStatusMap = [
-    {count: 6, status: 'A Hot Mess'},
-    {count: 4, status: 'Uhhhhh'},
-    {count: 2, status: 'Decent'},
-    {count: 0, status: 'Spotless'}
+    {count: 6, status: 'A Hot Mess', faceFrame: 3},
+    {count: 4, status: 'Uhhhhh', faceFrame: 2},
+    {count: 2, status: 'Decent', faceFrame: 1},
+    {count: 0, status: 'Spotless', faceFrame: 0}
   ];
 
   // More text
@@ -343,6 +343,27 @@ function Game() {
     pitch.wordWrapWidth = game.world.width - (margin * 6);
     pitch.anchor.setTo(0.5, 0);
 
+    // Results
+    game.add.text(380, 220, 'Food Status:', {font: 'bold 24px Helvetica', fill: '0x000000'});
+    game.add.text(380, 260, getScoreMapping(scoreCounter).status, {font: 'bold 18px Helvetica', fill: '0x000000'});
+    game.add.text(380, 285, scoreCounter + ' Noms', {font: '18px Helvetica', fill: '0x000000'});
+
+    game.add.text(380, 325, 'Mess Status:', {font: 'bold 24px Helvetica', fill: '0x000000'});
+    game.add.text(380, 365, getMissedMapping(missedCounter).status, {font: 'bold 18px Helvetica', fill: '0x000000'});
+    game.add.text(380, 390, missedCounter + ' Misses', {font: '18px Helvetica', fill: '0x000000'});
+
+    // Face!
+    var resultFace = game.add.sprite(200, 384, 'face');
+    resultFace.frame = getMissedMapping(missedCounter).faceFrame;
+
+    var resultEyes = game.add.sprite(200, 384, 'eyes');
+    var resultMouthKey = getScoreMapping(scoreCounter).key;
+    var resultMouth = game.add.sprite(200, 384, resultMouthKey);
+
+    resultFace.anchor.setTo(0.5, 0.75);
+    resultEyes.anchor.setTo(0.5, 0.75);
+    resultMouth.anchor.setTo(0.5, 0.5);
+
     // Button to go to campaign
     var px = game.world.centerX;
     var py = pitch.position.y + margin * 6;
@@ -373,8 +394,10 @@ function Game() {
   }
 
   function shareResults() {
+    var scoreStatus = getScoreMapping(scoreCounter).status;
+    var missStatus = getMissedMapping(missedCounter).status;
     var intentUrl = "https://twitter.com/intent/tweet?text=";
-    var shareText = "My results from feeding a DoSomething.org virtual baby: " + getScoreMapping(scoreCounter) + " and " + getMissedMapping(missedCounter) + ".";
+    var shareText = "Results from feeding my DoSomething.org virtual baby: " + scoreStatus + " and " + missStatus + ".";
     var shareUrl = intentUrl + shareText;
 
     window.open(shareUrl, '_blank');
@@ -385,7 +408,7 @@ function Game() {
 
     for (i = 0; i < foodStatusMap.length; i++) {
       if (scoreCounter >= foodStatusMap[i].count) {
-        return foodStatusMap[i].status;
+        return foodStatusMap[i];
       }
     }
 
@@ -397,7 +420,7 @@ function Game() {
 
     for (i = 0; i < messStatusMap.length; i++) {
       if (missedCounter >= messStatusMap[i].count) {
-        return messStatusMap[i].status;
+        return messStatusMap[i];
       }
     }
 
