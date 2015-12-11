@@ -29,7 +29,7 @@ function Game() {
   var scoreCounter = 0;
   var textMissed;
   var missedCounter = 0;
-  var scoreGoal = 20;
+  var scoreGoal = 10;
   var scoreBar;
 
   // The score and missed counters map to more generic buckets of results
@@ -49,7 +49,7 @@ function Game() {
   // More text
   var textTimer;
   var levelTime;
-  var startingTime = 21;
+  var startingTime = 16;
 
   // Restart and share button for end game screen
   var restartButton;

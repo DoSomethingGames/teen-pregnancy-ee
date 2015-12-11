@@ -23,7 +23,7 @@ function StartScreen() {
     startButton.events.onInputUp.add(startGame);
 
     text1 = game.add.text(game.world.centerX, 64, '', {font: '16px PressStart2P', fill: '#000000'});
-    text1.setText("[Placeholder Text] You're running late for school and have :20 seconds to feed your baby.");
+    text1.setText("[Placeholder Text] You're running late for school and have :15 seconds to feed your baby.");
     text1.wordWrap = true;
     text1.wordWrapWidth = 700;
     text1.anchor.setTo(0.5, 0);
