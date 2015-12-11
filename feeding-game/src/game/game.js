@@ -34,15 +34,15 @@ function Game() {
 
   // The score and missed counters map to more generic buckets of results
   var foodStatusMap = [
-    {count: 20, status: 'Chubby Bunny', key: 'mouth-open1'},
-    {count: 16, status: 'Satisfied', key: 'mouth-open2'},
-    {count: 10, status: 'Meh', key: 'mouth-closed'},
+    {count: 10, status: 'Chubby Bunny', key: 'mouth-open1'},
+    {count: 7, status: 'Satisfied', key: 'mouth-open2'},
+    {count: 4, status: 'Meh', key: 'mouth-closed'},
     {count: 0, status: 'HANGRY', key: 'mouth-open1'}
   ];
   var messStatusMap = [
-    {count: 6, status: 'A Hot Mess', faceFrame: 3},
-    {count: 4, status: 'Uhhhhh', faceFrame: 2},
-    {count: 2, status: 'Decent', faceFrame: 1},
+    {count: 5, status: 'A Hot Mess', faceFrame: 3},
+    {count: 3, status: 'Uhhhhh', faceFrame: 2},
+    {count: 1, status: 'Decent', faceFrame: 1},
     {count: 0, status: 'Spotless', faceFrame: 0}
   ];
 
@@ -258,15 +258,15 @@ function Game() {
     missedCounter++;
     textMissed.setText('Miss: ' + missedCounter);
 
-    if (missedCounter >= 6) {
+    if (missedCounter >= 5) {
       mouth.setFaceFrame(3);
       spBody.frame = 3;
     }
-    else if (missedCounter >= 4) {
+    else if (missedCounter >= 3) {
       mouth.setFaceFrame(2);
       spBody.frame = 2;
     }
-    else if (missedCounter >= 2) {
+    else if (missedCounter >= 1) {
       mouth.setFaceFrame(1);
       spBody.frame = 1;
     }
