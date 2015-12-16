@@ -40,7 +40,7 @@ function Game() {
     {count: 0, status: 'HANGRY', key: 'mouth-open1'}
   ];
   var messStatusMap = [
-    {count: 5, status: 'A Hot Mess', faceFrame: 3},
+    {count: 5, status: 'Yikes', faceFrame: 3},
     {count: 3, status: 'Uhhhhh', faceFrame: 2},
     {count: 1, status: 'Decent', faceFrame: 1},
     {count: 0, status: 'Spotless', faceFrame: 0}
@@ -328,7 +328,10 @@ function Game() {
     var pitch;
     var pitchButton;
     var pitchButtonText = "Give It A Try";
-    var pitchText = "94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?";
+    //var pitchText = "94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?";
+    var pitchChoose = ["94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?", "51% of teens believe that if they were involved in a pregnancy they would marry the baby's mother or father; in reality, 81% of teenage births are to unmarried teens. Think you could take care of a virtual baby by yourself for a day?","A sexually active teen who doesn’t use contraceptives has a 90% chance of becoming pregnant within a year. Think you could handle a virtual baby for a day?"];
+    var random = Math.floor(Math.random * this.pitchChoose.length);
+    var pitchText = this.pitchChoose[random];
     var pitchStyle = {"font": "18px Helvetica", fill: "0x000000"};
 
     // Overlay background
@@ -338,7 +341,8 @@ function Game() {
     gameGraphics.endFill();
 
     // Pitch to level up to a campaign
-    pitch = game.add.text(game.world.centerX, margin * 3, pitchText, pitchStyle);
+    pitch = game.add.text(game.world.centerX, margin * 3, this.pitchText, pitchStyle);
+    console.log(this.pitchText);
     pitch.wordWrap = true;
     pitch.wordWrapWidth = game.world.width - (margin * 6);
     pitch.anchor.setTo(0.5, 0);
