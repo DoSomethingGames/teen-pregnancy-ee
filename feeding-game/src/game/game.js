@@ -329,9 +329,9 @@ function Game() {
     var pitchButton;
     var pitchButtonText = "Give It A Try";
     //var pitchText = "94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?";
-    var pitchChoose = ["94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?", "51% of teens believe that if they were involved in a pregnancy they would marry the baby's mother or father; in reality, 81% of teenage births are to unmarried teens. Think you could take care of a virtual baby by yourself for a day?","A sexually active teen who doesn’t use contraceptives has a 90% chance of becoming pregnant within a year. Think you could handle a virtual baby for a day?"];
-    var random = Math.floor(Math.random * this.pitchChoose.length);
-    var pitchText = this.pitchChoose[random];
+    var pitchChoose = ["94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?", "51% of teens think if they were involved in a pregnancy they would marry the baby's mother or father. In reality, 81% remain unmarried. Think you could take care of a virtual baby by yourself for a day?","A sexually active teen who doesn’t use contraceptives has a 90% chance of becoming pregnant within a year. Think you can handle a virtual baby for a day?"];
+    var random = Math.floor(Math.random() * pitchChoose.length);
+    var pitchText = pitchChoose[random];
     var pitchStyle = {"font": "18px Helvetica", fill: "0x000000"};
 
     // Overlay background
@@ -341,8 +341,7 @@ function Game() {
     gameGraphics.endFill();
 
     // Pitch to level up to a campaign
-    pitch = game.add.text(game.world.centerX, margin * 3, this.pitchText, pitchStyle);
-    console.log(this.pitchText);
+    pitch = game.add.text(game.world.centerX, margin * 3, pitchText, pitchStyle);
     pitch.wordWrap = true;
     pitch.wordWrapWidth = game.world.width - (margin * 6);
     pitch.anchor.setTo(0.5, 0);
@@ -370,7 +369,7 @@ function Game() {
 
     // Button to go to campaign
     var px = game.world.centerX;
-    var py = pitch.position.y + margin * 6;
+    var py = pitch.position.y + margin * 6; //@todo possibly lower to make room for pitch text
     var pKey = 'campaign-button';
     var pCallback = function() { window.open(campaignUrl,'_blank'); };
     pitchButton = game.add.button(px, py, pKey, pCallback);
