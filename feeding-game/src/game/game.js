@@ -40,7 +40,7 @@ function Game() {
     {count: 0, status: 'HANGRY', key: 'mouth-open1'}
   ];
   var messStatusMap = [
-    {count: 5, status: 'A Hot Mess', faceFrame: 3},
+    {count: 5, status: 'Yikes', faceFrame: 3},
     {count: 3, status: 'Uhhhhh', faceFrame: 2},
     {count: 1, status: 'Decent', faceFrame: 1},
     {count: 0, status: 'Spotless', faceFrame: 0}
@@ -328,7 +328,12 @@ function Game() {
     var pitch;
     var pitchButton;
     var pitchButtonText = "Give It A Try";
-    var pitchText = "94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?";
+    //var pitchText = "94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?";
+    var pitchChoose = ["94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?", 
+                       "51% of teens think if they were involved in a pregnancy they would marry the baby's mother or father. In reality, 81% remain unmarried. Think you could take care of a virtual baby by yourself for a day?",
+                       "A sexually active teen who doesn’t use contraceptives has a 90% chance of becoming pregnant within a year. Think you can handle a virtual baby for a day?"];
+    var random = Math.floor(Math.random() * pitchChoose.length);
+    var pitchText = pitchChoose[random];
     var pitchStyle = {"font": "18px Helvetica", fill: "0x000000"};
 
     // Overlay background
@@ -366,7 +371,7 @@ function Game() {
 
     // Button to go to campaign
     var px = game.world.centerX;
-    var py = pitch.position.y + margin * 6;
+    var py = pitch.position.y + margin * 6; //@todo possibly lower to make room for pitch text
     var pKey = 'campaign-button';
     var pCallback = function() { window.open(campaignUrl,'_blank'); };
     pitchButton = game.add.button(px, py, pKey, pCallback);
