@@ -42,6 +42,7 @@ function StartScreen() {
   function startGame() {
     game.state.add('game', new Game());
     game.state.start('game');
+    ga('send', 'event', 'teen-pregnancy-exp-A', 'button-clicked', 'start');
   }
 
   return {
