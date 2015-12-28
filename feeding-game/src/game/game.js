@@ -351,6 +351,7 @@ function Game() {
     game.add.text(380, 325, 'Mess Status:', {font: 'bold 24px Helvetica', fill: '0x000000'});
     game.add.text(380, 365, getMissedMapping(missedCounter).status, {font: 'bold 18px Helvetica', fill: '0x000000'});
     game.add.text(380, 390, missedCounter + ' Misses', {font: '18px Helvetica', fill: '0x000000'});
+    ga('send', 'event', 'teen-pregnancy-exp-A', 'score', scoreCounter);
 
     // Face!
     var resultFace = game.add.sprite(200, 384, 'face');
@@ -368,7 +369,10 @@ function Game() {
     var px = game.world.centerX;
     var py = pitch.position.y + margin * 6;
     var pKey = 'campaign-button';
-    var pCallback = function() { window.open(campaignUrl,'_blank'); };
+    var pCallback = function() { 
+      window.open(campaignUrl,'_blank'); 
+      ga('send', 'event', 'teen-pregnancy-exp-A', 'button-clicked', 'campaign');
+    };
     pitchButton = game.add.button(px, py, pKey, pCallback);
     pitchButton.anchor.setTo(0.5, 0);
 
@@ -391,6 +395,7 @@ function Game() {
     restartButton.kill();
     game.state.add('game', new Game());
     game.state.start('game');
+    ga('send', 'event', 'teen-pregnancy-exp-A', 'button-clicked', 'restart');
   }
 
   function shareResults() {
@@ -399,6 +404,7 @@ function Game() {
     var intentUrl = "https://twitter.com/intent/tweet?text=";
     var shareText = "Results from feeding my DoSomething.org virtual baby: " + scoreStatus + " and " + missStatus + ".";
     var shareUrl = intentUrl + shareText;
+    ga('send', 'event', 'teen-pregnancy-exp-A', 'button-clicked', 'share');
 
     window.open(shareUrl, '_blank');
   }
