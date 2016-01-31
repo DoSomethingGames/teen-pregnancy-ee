@@ -81,15 +81,15 @@ function Game() {
 
   function preload() {
     game.load.image('bg', 'assets/kitchen_bg.jpg');
-    game.load.spritesheet('body', 'assets/body_placeholder_spritesheet.png', 450, 183);
+    game.load.spritesheet('body', 'assets/body_spritesheet.png', 438, 183);
     game.load.image('bowl-bg', 'assets/bowl_placeholder_full.png');
     game.load.image('bowl', 'assets/bowl.png');
 
-    game.load.spritesheet('face', 'assets/face_spritesheet_placeholder.png', 256, 256);
-    game.load.image('eyes', 'assets/eyes_placeholder.png');
-    game.load.image('mouth-closed', 'assets/mouth_closed_placeholder.png');
-    game.load.image('mouth-open1', 'assets/mouth_open1_placeholder.png');
-    game.load.image('mouth-open2', 'assets/mouth_open2_placeholder.png');
+    game.load.spritesheet('face', 'assets/face_spritesheet.png', 256, 256);
+    game.load.image('eyes', 'assets/eyes.png');
+    game.load.image('mouth-closed', 'assets/mouth_closed.png');
+    game.load.image('mouth-open1', 'assets/mouth_open1.png');
+    game.load.image('mouth-open2', 'assets/mouth_open2.png');
 
     game.load.image('spoon-food', 'assets/spoon_food.png');
     game.load.image('spoon-nofood', 'assets/spoon_empty.png');
@@ -282,7 +282,7 @@ function Game() {
     var colorOutlineDefault = 0x000000;
     var colorOutlineWin = 0xffffff;
     var colorOutline = scoreCounter >= scoreGoal ? colorOutlineWin : colorOutlineDefault;
-    var colorFillDefault = 0x117024;
+    var colorFillDefault = 0xf0992f;
     var colorFillWin = 0xfefe56;
     var colorFill = scoreCounter >= scoreGoal ? colorFillWin : colorFillDefault;
     var interval = Math.floor(height / scoreGoal);
