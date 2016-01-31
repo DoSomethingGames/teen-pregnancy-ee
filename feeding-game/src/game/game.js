@@ -282,7 +282,7 @@ function Game() {
     var colorOutlineDefault = 0x000000;
     var colorOutlineWin = 0xffffff;
     var colorOutline = scoreCounter >= scoreGoal ? colorOutlineWin : colorOutlineDefault;
-    var colorFillDefault = 0x117024;
+    var colorFillDefault = 0xf0992f;
     var colorFillWin = 0xfefe56;
     var colorFill = scoreCounter >= scoreGoal ? colorFillWin : colorFillDefault;
     var interval = Math.floor(height / scoreGoal);
