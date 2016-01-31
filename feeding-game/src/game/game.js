@@ -85,11 +85,11 @@ function Game() {
     game.load.image('bowl-bg', 'assets/bowl_placeholder_full.png');
     game.load.image('bowl', 'assets/bowl.png');
 
-    game.load.spritesheet('face', 'assets/face_spritesheet_placeholder.png', 256, 256);
-    game.load.image('eyes', 'assets/eyes_placeholder.png');
-    game.load.image('mouth-closed', 'assets/mouth_closed_placeholder.png');
-    game.load.image('mouth-open1', 'assets/mouth_open1_placeholder.png');
-    game.load.image('mouth-open2', 'assets/mouth_open2_placeholder.png');
+    game.load.spritesheet('face', 'assets/face_spritesheet.png', 256, 256);
+    game.load.image('eyes', 'assets/eyes.png');
+    game.load.image('mouth-closed', 'assets/mouth_closed.png');
+    game.load.image('mouth-open1', 'assets/mouth_open1.png');
+    game.load.image('mouth-open2', 'assets/mouth_open2.png');
 
     game.load.image('spoon-food', 'assets/spoon_food.png');
     game.load.image('spoon-nofood', 'assets/spoon_empty.png');
