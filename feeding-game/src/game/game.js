@@ -81,7 +81,7 @@ function Game() {
 
   function preload() {
     game.load.image('bg', 'assets/kitchen_bg.jpg');
-    game.load.spritesheet('body', 'assets/body_placeholder_spritesheet.png', 450, 183);
+    game.load.spritesheet('body', 'assets/body_spritesheet.png', 438, 183);
     game.load.image('bowl-bg', 'assets/bowl_placeholder_full.png');
     game.load.image('bowl', 'assets/bowl.png');
 
