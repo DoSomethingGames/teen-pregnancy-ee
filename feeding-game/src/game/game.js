@@ -36,13 +36,13 @@ function Game() {
   var foodStatusMap = [
     {count: 10, status: 'Chubby Bunny', key: 'mouth-open1'},
     {count: 7, status: 'Satisfied', key: 'mouth-open2'},
-    {count: 4, status: 'Meh', key: 'mouth-closed'},
+    {count: 4, status: '*Stomach Growl*', key: 'mouth-closed'},
     {count: 0, status: 'HANGRY', key: 'mouth-open1'}
   ];
   var messStatusMap = [
-    {count: 5, status: 'Yikes', faceFrame: 3},
-    {count: 3, status: 'Uhhhhh', faceFrame: 2},
-    {count: 1, status: 'Decent', faceFrame: 1},
+    {count: 5, status: 'DEFCON 1', faceFrame: 3},
+    {count: 3, status: 'Gonna need a mop', faceFrame: 2},
+    {count: 1, status: 'Just a Smidge', faceFrame: 1},
     {count: 0, status: 'Spotless', faceFrame: 0}
   ];
 
@@ -327,7 +327,6 @@ function Game() {
     var pitch;
     var pitchButton;
     var pitchButtonText = "Give It A Try";
-    //var pitchText = "94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?";
     var pitchChoose = ["94% of teens believe they would stay in school if they were pregnant. In reality, only 70% do. Think you can take care of a virtual baby for a day?", 
                        "51% of teens think if they were involved in a pregnancy they would marry the baby's mother or father. In reality, 81% remain unmarried. Think you could take care of a virtual baby by yourself for a day?",
                        "A sexually active teen who doesn’t use contraceptives has a 90% chance of becoming pregnant within a year. Think you can handle a virtual baby for a day?"];
@@ -348,13 +347,15 @@ function Game() {
     pitch.anchor.setTo(0.5, 0);
 
     // Results
-    game.add.text(380, 220, 'Food Status:', {font: 'bold 24px Helvetica', fill: '0x000000'});
-    game.add.text(380, 260, getScoreMapping(scoreCounter).status, {font: 'bold 18px Helvetica', fill: '0x000000'});
-    game.add.text(380, 285, scoreCounter + ' Noms', {font: '18px Helvetica', fill: '0x000000'});
+    game.add.text(360, 220, 'Food Eaten:', {font: '22px Helvetica', fill: '0x000000'});
+    game.add.text(500, 220, scoreCounter, {font: 'bold 22px Helvetica', fill: '0x000000'});
+    game.add.text(360, 250, 'Hunger Level:', {font: '22px Helvetica', fill: '0x000000'});
+    game.add.text(360, 280, getScoreMapping(scoreCounter).status, {font: 'bold 22px Helvetica', fill: '0x000000'});
 
-    game.add.text(380, 325, 'Mess Status:', {font: 'bold 24px Helvetica', fill: '0x000000'});
-    game.add.text(380, 365, getMissedMapping(missedCounter).status, {font: 'bold 18px Helvetica', fill: '0x000000'});
-    game.add.text(380, 390, missedCounter + ' Misses', {font: '18px Helvetica', fill: '0x000000'});
+    game.add.text(360, 330, 'Food Missed:' , {font: '22px Helvetica', fill: '0x000000'});
+    game.add.text(500, 330, missedCounter, {font: 'bold 22px Helvetica', fill: '0x000000'});
+    game.add.text(360, 360, 'Mess Level:', {font: '22px Helvetica', fill: '0x000000'});
+    game.add.text(360, 390, getMissedMapping(missedCounter).status, {font: 'bold 22px Helvetica', fill: '0x000000'});
 
     // Face!
     var resultFace = game.add.sprite(200, 384, 'face');
@@ -370,7 +371,7 @@ function Game() {
 
     // Button to go to campaign
     var px = game.world.centerX;
-    var py = pitch.position.y + margin * 6; //@todo possibly lower to make room for pitch text
+    var py = pitch.position.y + margin * 7;
     var pKey = 'campaign-button';
     var pCallback = function() { window.open(campaignUrl,'_blank'); };
     pitchButton = game.add.button(px, py, pKey, pCallback);
