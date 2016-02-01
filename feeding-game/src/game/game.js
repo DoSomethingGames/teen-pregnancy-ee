@@ -82,7 +82,6 @@ function Game() {
   function preload() {
     game.load.image('bg', 'assets/kitchen_bg.jpg');
     game.load.spritesheet('body', 'assets/body_spritesheet.png', 438, 183);
-    game.load.image('bowl-bg', 'assets/bowl_placeholder_full.png');
     game.load.image('bowl', 'assets/bowl.png');
 
     game.load.spritesheet('face', 'assets/face_spritesheet.png', 256, 256);
@@ -399,13 +398,10 @@ function Game() {
   }
 
   function shareResults() {
-    var scoreStatus = getScoreMapping(scoreCounter).status;
-    var missStatus = getMissedMapping(missedCounter).status;
-    var intentUrl = "https://twitter.com/intent/tweet?text=";
-    var shareText = "Results from feeding my DoSomething.org virtual baby: " + scoreStatus + " and " + missStatus + ".";
-    var shareUrl = intentUrl + shareText;
+    var intent = "https://twitter.com/intent/tweet?text=";
+    var text = "I got a score of " + scoreCounter + " feeding my DoSomething.org virtual baby. Take care of your own and learn more at https://www.dosomething.org/us/facts/11-facts-about-teen-pregnancy";
 
-    window.open(shareUrl, '_blank');
+    window.open(intent + text, '_blank');
   }
 
   function getScoreMapping(val) {
