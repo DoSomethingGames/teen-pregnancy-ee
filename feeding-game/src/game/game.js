@@ -83,6 +83,7 @@ function Game() {
     game.load.image('bg', 'assets/kitchen_bg.jpg');
     game.load.spritesheet('body', 'assets/body_spritesheet.png', 438, 183);
     game.load.image('bowl', 'assets/bowl.png');
+    game.load.image('barf', 'assets/barf.png');
 
     game.load.spritesheet('face', 'assets/face_spritesheet.png', 256, 256);
     game.load.image('eyes', 'assets/eyes.png');
@@ -215,6 +216,16 @@ function Game() {
     
   }
 
+  function barf() {
+    var vomitSprite;
+    var vomit;
+    var vomitText = "BLEH!";
+    var vomitTextStyle = {"font": "18px Helvetica", fill: "0x000000"};
+
+    vomitSprite = game.add.sprite(game.world.centerX, game.world.centerY, 'barf');
+    vomit = game.add.text(game.world.centerX, game.world.centerY, vomitText, vomitStyle);
+  }
+
   function onInputDown(sprite, pointer) {
     if (sprite.key == 'bowl') {
       spSpoonFood.visible = true;
@@ -236,6 +247,11 @@ function Game() {
       }
       else {
         feedMissed();
+      }
+
+      if (scoreCounter > scoreGoal) {
+        barf();
+        isGameOver = true;
       }
     }
   }
