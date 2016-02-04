@@ -7,6 +7,7 @@ function Game() {
   var spBowlBg;
   var spSpoonFood;
   var spSpoonDefault;
+  var vomitSprite;
 
   // Audio
   var fxBeep;
@@ -29,8 +30,12 @@ function Game() {
   var scoreCounter = 0;
   var textMissed;
   var missedCounter = 0;
-  var scoreGoal = 1;
+  var scoreGoal = 10;
   var scoreBar;
+
+  //Check for vomit 
+  var isVomit = false;
+  var vomit; //holds text
 
   // The score and missed counters map to more generic buckets of results
   var foodStatusMap = [
@@ -217,13 +222,12 @@ function Game() {
   }
 
   function barf() {
-    var vomitSprite;
-    var vomit;
     var vomitText = "BLEH!";
     var vomitTextStyle = {"font": "72px Helvetica", fill: "0x000000"};
 
     vomitSprite = game.add.sprite(0, 0, 'barf');
     vomit = game.add.text(game.world.centerX - 100, game.world.centerY - 36, vomitText, vomitTextStyle);
+    isVomit = true;
   }
 
   function onInputDown(sprite, pointer) {
@@ -251,7 +255,7 @@ function Game() {
 
       if (scoreCounter > scoreGoal) {
         barf();
-        isGameOver = true;
+        endGame();
       }
     }
   }
@@ -349,6 +353,12 @@ function Game() {
     var random = Math.floor(Math.random() * pitchChoose.length);
     var pitchText = pitchChoose[random];
     var pitchStyle = {"font": "18px Helvetica", fill: "0x000000"};
+
+    //Clean up vomit
+    if (isVomit) {
+      vomitSprite.kill();
+      vomit.kill();
+    }
 
     // Overlay background
     gameGraphics.lineStyle(4, 0x000000, 1);
