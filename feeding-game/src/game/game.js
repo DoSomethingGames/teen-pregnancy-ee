@@ -29,7 +29,7 @@ function Game() {
   var scoreCounter = 0;
   var textMissed;
   var missedCounter = 0;
-  var scoreGoal = 10;
+  var scoreGoal = 1;
   var scoreBar;
 
   // The score and missed counters map to more generic buckets of results
@@ -83,7 +83,7 @@ function Game() {
     game.load.image('bg', 'assets/kitchen_bg.jpg');
     game.load.spritesheet('body', 'assets/body_spritesheet.png', 438, 183);
     game.load.image('bowl', 'assets/bowl.png');
-    game.load.image('barf', 'assets/barf.png');
+    game.load.image('barf', 'assets/barf.gif');
 
     game.load.spritesheet('face', 'assets/face_spritesheet.png', 256, 256);
     game.load.image('eyes', 'assets/eyes.png');
@@ -220,10 +220,10 @@ function Game() {
     var vomitSprite;
     var vomit;
     var vomitText = "BLEH!";
-    var vomitTextStyle = {"font": "18px Helvetica", fill: "0x000000"};
+    var vomitTextStyle = {"font": "72px Helvetica", fill: "0x000000"};
 
-    vomitSprite = game.add.sprite(game.world.centerX, game.world.centerY, 'barf');
-    vomit = game.add.text(game.world.centerX, game.world.centerY, vomitText, vomitStyle);
+    vomitSprite = game.add.sprite(0, 0, 'barf');
+    vomit = game.add.text(game.world.centerX - 100, game.world.centerY - 36, vomitText, vomitTextStyle);
   }
 
   function onInputDown(sprite, pointer) {
