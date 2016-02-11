@@ -96,11 +96,11 @@ function Game() {
     game.load.image('share-button', 'assets/shareButton.png');
     game.load.image('campaign-button', 'assets/campaignButton.png');
 
-    game.load.audio('beep', 'assets/sounds/beep.ogg');
-    game.load.audio('end-ding', 'assets/sounds/end_ding.ogg');
-    game.load.audio('nom', 'assets/sounds/nom.ogg');
-    game.load.audio('splat', 'assets/sounds/splat.ogg');
-    game.load.audio('victory', 'assets/sounds/baby_laugh.ogg');
+    game.load.audio('beep', 'assets/sounds/beep.mp3');
+    game.load.audio('end-ding', 'assets/sounds/end_ding.mp3');
+    game.load.audio('nom', 'assets/sounds/nom.mp3');
+    game.load.audio('splat', 'assets/sounds/splat.mp3');
+    game.load.audio('victory', 'assets/sounds/baby_laugh.mp3');
   }
 
   function create() {
