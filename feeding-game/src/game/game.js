@@ -30,7 +30,7 @@ function Game() {
   var scoreCounter = 0;
   var textMissed;
   var missedCounter = 0;
-  var scoreGoal = 10;
+  var scoreGoal = Math.floor(Math.random() * 6) + 10; //Randomizes between 1 and 15
   var scoreBar;
 
   //Check for vomit 
