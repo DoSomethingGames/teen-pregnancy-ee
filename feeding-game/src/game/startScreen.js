@@ -19,24 +19,24 @@ function StartScreen() {
     background = game.add.sprite(0, 0, 'background');
     background.tint = 0x336699;
 
-    startButton = game.add.button(game.world.centerX, 300, 'startButton', null, null, 2, 1, 0);
+    startButton = game.add.button(game.world.centerX, 320, 'startButton', null, null, 2, 1, 0);
     startButton.anchor.setTo(0.5, 0);
     startButton.inputEnabled = true;
     startButton.events.onInputUp.add(startGame);
 
-    title = game.add.text(game.world.centerX, 64, '', {font: '20px PressStart2P', fill: '#FFFFFF'});
+    title = game.add.text(game.world.centerX, 64, '', {font: '32px PressStart2P', fill: '#FFFFFF'});
     title.setText("FEED THE BABY");
     title.wordWrap = true;
     title.wordWrapWidth = 700;
     title.anchor.setTo(0.5, 0);
 
-    text1 = game.add.text(game.world.centerX, 128, '', {font: '16px PressStart2P', fill: '#FFFFFF'});
+    text1 = game.add.text(game.world.centerX, 136, '', {font: '16px PressStart2P', fill: '#FFFFFF'});
     text1.setText("You're running late for school and have 15 seconds to feed your baby.");
     text1.wordWrap = true;
     text1.wordWrapWidth = 700;
     text1.anchor.setTo(0.5, 0);
 
-    text2 = game.add.text(game.world.centerX, 192, '', {font: '16px PressStart2P', fill: '#FFFFFF'});
+    text2 = game.add.text(game.world.centerX, 200, '', {font: '16px PressStart2P', fill: '#FFFFFF'});
     text2.setText("Click on the bowl and drag and drop food into your baby's mouth. Make sure not to miss, or overfeed - or else you'll get a different type of mess!");
     text2.wordWrap = true;
     text2.wordWrapWidth = 700;
